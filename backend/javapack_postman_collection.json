@@ -1,0 +1,1101 @@
+{
+  "info": {
+    "_postman_id": "javapack-rental-api-v1",
+    "name": "JavaPack Travel Gear Rental API",
+    "description": "Complete Postman Collection for JavaPack Travel Gear Rental RESTful API (Express.js, Sequelize ORM, MySQL, JWT Auth, WIB Timezone, and Soft Delete).\n\nEvery list endpoint supports pagination (`page`, `limit`) and optional filters (`search`, etc.) that can be toggled in the Params tab.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refreshToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Health Check",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Authentication",
+      "item": [
+        {
+          "name": "Login (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"admin@gmail.com\",\n    \"password\": \"password\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Register (Customer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"John Traveler\",\n    \"email\": \"john.traveler@example.com\",\n    \"password\": \"password\",\n    \"phone\": \"081299887766\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login (Customer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"john.traveler@example.com\",\n    \"password\": \"password\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Refresh Access Token (/auth/refresh)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.data.token);",
+                  "}",
+                  "if (jsonData.data && jsonData.data.refreshToken) {",
+                  "    pm.collectionVariables.set('refreshToken', jsonData.data.refreshToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/refresh",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "refresh"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User Profile (/auth/me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "Update Current User Profile (/auth/me)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"John Traveler Updated\",\n    \"phone\": \"081233445566\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Public Website",
+      "item": [
+        {
+          "name": "Get Home Data (Banners, Categories, Locations, Featured Products)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/public/home?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["public", "home"],
+              "query": [
+                { "key": "page", "value": "1", "description": "Page number (default: 1)" },
+                { "key": "limit", "value": "10", "description": "Items per page (1 - 100)" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Public Products (All Filters & Pagination)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/public/products?page=1&limit=10&search=Parka&category_id=1&pickup_location_id=1",
+              "host": ["{{base_url}}"],
+              "path": ["public", "products"],
+              "query": [
+                { "key": "page", "value": "1", "description": "Page number (default: 1)" },
+                { "key": "limit", "value": "10", "description": "Items per page (1 - 100)" },
+                { "key": "search", "value": "Parka", "description": "Search by product name or description", "disabled": true },
+                { "key": "category_id", "value": "1", "description": "Filter by category ID", "disabled": true },
+                { "key": "pickup_location_id", "value": "1", "description": "Filter by pickup location ID", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Product Detail by Slug",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/public/products/arctic-thermal-parka-pro",
+              "host": ["{{base_url}}"],
+              "path": ["public", "products", "arctic-thermal-parka-pro"]
+            }
+          }
+        },
+        {
+          "name": "Get Public Categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/public/categories?page=1&limit=10&search=Winter",
+              "host": ["{{base_url}}"],
+              "path": ["public", "categories"],
+              "query": [
+                { "key": "page", "value": "1", "description": "Page number (default: 1)" },
+                { "key": "limit", "value": "10", "description": "Items per page (1 - 100)" },
+                { "key": "search", "value": "Winter", "description": "Search by category name", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Public Pickup Locations",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/public/pickup-locations?page=1&limit=10&search=Terminal",
+              "host": ["{{base_url}}"],
+              "path": ["public", "pickup-locations"],
+              "query": [
+                { "key": "page", "value": "1", "description": "Page number (default: 1)" },
+                { "key": "limit", "value": "10", "description": "Items per page (1 - 100)" },
+                { "key": "search", "value": "Terminal", "description": "Search by location name or city", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Public FAQs",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/public/faqs?page=1&limit=10&search=payment",
+              "host": ["{{base_url}}"],
+              "path": ["public", "faqs"],
+              "query": [
+                { "key": "page", "value": "1", "description": "Page number (default: 1)" },
+                { "key": "limit", "value": "10", "description": "Items per page (1 - 100)" },
+                { "key": "search", "value": "payment", "description": "Search by question or answer", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Submit Contact Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Sarah Wijaya\",\n    \"email\": \"sarah@example.com\",\n    \"subject\": \"Winter Gear Sizing Inquiry\",\n    \"message\": \"Could you advise on the size chart for Arctic Thermal Parka Pro?\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/public/contact",
+              "host": ["{{base_url}}"],
+              "path": ["public", "contact"]
+            }
+          }
+        },
+        {
+          "name": "Record Site Visit (Visitor Detection)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"visitor_token\": \"vis-browser-abc123\",\n    \"page\": \"home\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/public/visits",
+              "host": ["{{base_url}}"],
+              "path": ["public", "visits"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Orders & Payment Webhook",
+      "item": [
+        {
+          "name": "Get My Orders (Paginated)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders?page=1&limit=10&status=pending_payment",
+              "host": ["{{base_url}}"],
+              "path": ["orders"],
+              "query": [
+                { "key": "page", "value": "1", "description": "Page number (default: 1)" },
+                { "key": "limit", "value": "10", "description": "Items per page (1 - 100)" },
+                { "key": "status", "value": "pending_payment", "description": "Filter status: pending_payment | paid | active_rent", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get My Rental History Logs (Immutable)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders/history?page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "history"],
+              "query": [
+                { "key": "page", "value": "1", "description": "Page number (default: 1)" },
+                { "key": "limit", "value": "20", "description": "Items per page (1 - 100)" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Order Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders/1",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Rental Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"product_id\": 1,\n    \"pickup_location_id\": 1,\n    \"quantity\": 1,\n    \"start_date\": \"2026-11-20\",\n    \"end_date\": \"2026-11-25\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/orders",
+              "host": ["{{base_url}}"],
+              "path": ["orders"]
+            }
+          }
+        },
+        {
+          "name": "Update Pending Order",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"quantity\": 2,\n    \"pickup_location_id\": 2,\n    \"start_date\": \"2026-11-21\",\n    \"end_date\": \"2026-11-26\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/orders/1",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Pending Order (Soft Delete & Restore Stock)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/orders/1",
+              "host": ["{{base_url}}"],
+              "path": ["orders", "1"]
+            }
+          }
+        },
+        {
+          "name": "Payment Gateway Webhook Callback",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"order_code\": \"JVP-20261117-1001\",\n    \"payment_status\": \"paid\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/webhooks/payment",
+              "host": ["{{base_url}}"],
+              "path": ["webhooks", "payment"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Admin CRUD - Hero Banners",
+      "item": [
+        {
+          "name": "List Hero Banners",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/hero-banners?page=1&limit=10&search=Winter&is_active=true",
+              "host": ["{{base_url}}"],
+              "path": ["hero-banners"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "search", "value": "Winter", "disabled": true },
+                { "key": "is_active", "value": "true", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Hero Banner Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/hero-banners/1", "host": ["{{base_url}}"], "path": ["hero-banners", "1"] }
+          }
+        },
+        {
+          "name": "Create Hero Banner",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Hokkaido Ski Season\",\n    \"subtitle\": \"Premium snow gear ready for pickup before departure.\",\n    \"image_url\": \"/images/hero/hokkaido.jpg\",\n    \"cta_text\": \"Rent Now\",\n    \"cta_link\": \"/products\",\n    \"sort_order\": 12,\n    \"is_active\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/hero-banners", "host": ["{{base_url}}"], "path": ["hero-banners"] }
+          }
+        },
+        {
+          "name": "Update Hero Banner",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Hokkaido Ski Season 2026\",\n    \"is_active\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/hero-banners/1", "host": ["{{base_url}}"], "path": ["hero-banners", "1"] }
+          }
+        },
+        {
+          "name": "Delete Hero Banner (Soft Delete)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/hero-banners/1", "host": ["{{base_url}}"], "path": ["hero-banners", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Admin CRUD - Categories",
+      "item": [
+        {
+          "name": "List Categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categories?page=1&limit=10&search=Winter&is_active=true",
+              "host": ["{{base_url}}"],
+              "path": ["categories"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "search", "value": "Winter", "disabled": true },
+                { "key": "is_active", "value": "true", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Category Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/categories/1", "host": ["{{base_url}}"], "path": ["categories", "1"] }
+          }
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Ski Goggles & Helmets\",\n    \"description\": \"Anti-fog ski goggles and certified snow helmets.\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/categories", "host": ["{{base_url}}"], "path": ["categories"] }
+          }
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Winter Outerwear & Coats\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/categories/1", "host": ["{{base_url}}"], "path": ["categories", "1"] }
+          }
+        },
+        {
+          "name": "Delete Category (Soft Delete)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/categories/1", "host": ["{{base_url}}"], "path": ["categories", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Admin CRUD - Pickup Locations",
+      "item": [
+        {
+          "name": "List Pickup Locations",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/pickup-locations?page=1&limit=10&search=Jakarta&is_active=true",
+              "host": ["{{base_url}}"],
+              "path": ["pickup-locations"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "search", "value": "Jakarta", "disabled": true },
+                { "key": "is_active", "value": "true", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Pickup Location Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/pickup-locations/1", "host": ["{{base_url}}"], "path": ["pickup-locations", "1"] }
+          }
+        },
+        {
+          "name": "Create Pickup Location",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Halim Perdanakusuma Hub\",\n    \"address\": \"Main Terminal Departure Gate 1, East Jakarta\",\n    \"city\": \"Jakarta\",\n    \"operational_hours\": \"05:00 - 21:00 WIB\",\n    \"is_active\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/pickup-locations", "host": ["{{base_url}}"], "path": ["pickup-locations"] }
+          }
+        },
+        {
+          "name": "Update Pickup Location",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"operational_hours\": \"04:30 - 23:30 WIB\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/pickup-locations/1", "host": ["{{base_url}}"], "path": ["pickup-locations", "1"] }
+          }
+        },
+        {
+          "name": "Delete Pickup Location (Soft Delete)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/pickup-locations/1", "host": ["{{base_url}}"], "path": ["pickup-locations", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Admin CRUD - Products",
+      "item": [
+        {
+          "name": "List Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/products?page=1&limit=10&search=Parka&is_active=true",
+              "host": ["{{base_url}}"],
+              "path": ["products"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "search", "value": "Parka", "disabled": true },
+                { "key": "is_active", "value": "true", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Product Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/products/1", "host": ["{{base_url}}"], "path": ["products", "1"] }
+          }
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"category_id\": 1,\n    \"pickup_location_id\": 1,\n    \"name\": \"Glacier Expedition Down Coat\",\n    \"description\": \"Ultra-warm 800-fill goose down expedition coat.\",\n    \"image_url\": \"/images/products/glacier-coat.jpg\",\n    \"price_per_day\": 95000,\n    \"stock\": 10,\n    \"is_active\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/products", "host": ["{{base_url}}"], "path": ["products"] }
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"price_per_day\": 90000,\n    \"stock\": 18\n}"
+            },
+            "url": { "raw": "{{base_url}}/products/1", "host": ["{{base_url}}"], "path": ["products", "1"] }
+          }
+        },
+        {
+          "name": "Delete Product (Soft Delete)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/products/1", "host": ["{{base_url}}"], "path": ["products", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Admin CRUD - FAQs",
+      "item": [
+        {
+          "name": "List FAQs",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/faqs?page=1&limit=10&search=payment&is_active=true",
+              "host": ["{{base_url}}"],
+              "path": ["faqs"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "search", "value": "payment", "disabled": true },
+                { "key": "is_active", "value": "true", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get FAQ Detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/faqs/1", "host": ["{{base_url}}"], "path": ["faqs", "1"] }
+          }
+        },
+        {
+          "name": "Create FAQ",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"question\": \"Do you provide luggage wrapping at airport pickup?\",\n    \"answer\": \"Yes, complimentary protective rain covers are included with every hardcase rental.\",\n    \"sort_order\": 12,\n    \"is_active\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/faqs", "host": ["{{base_url}}"], "path": ["faqs"] }
+          }
+        },
+        {
+          "name": "Update FAQ",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"is_active\": true,\n    \"sort_order\": 1\n}"
+            },
+            "url": { "raw": "{{base_url}}/faqs/1", "host": ["{{base_url}}"], "path": ["faqs", "1"] }
+          }
+        },
+        {
+          "name": "Delete FAQ (Soft Delete)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/faqs/1", "host": ["{{base_url}}"], "path": ["faqs", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Admin CMS - Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard Overview (KPIs & Site Visits Chart)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cms/dashboard?page=all&visitor_type=all&month=11&year=2026",
+              "host": ["{{base_url}}"],
+              "path": ["cms", "dashboard"],
+              "query": [
+                { "key": "page", "value": "all", "description": "Filter page: all | home | products | checkout", "disabled": true },
+                { "key": "visitor_type", "value": "all", "description": "Filter visitor: all | new | returning", "disabled": true },
+                { "key": "month", "value": "11", "description": "Month number (1-12)", "disabled": true },
+                { "key": "year", "value": "2026", "description": "4-digit year", "disabled": true }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Admin CMS - Orders",
+      "item": [
+        {
+          "name": "List All Orders (CMS)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cms/orders?page=1&limit=10&search=JVP&status=pending_payment&category_id=1&pickup_location_id=1&start_date=2026-11-01&end_date=2026-11-30",
+              "host": ["{{base_url}}"],
+              "path": ["cms", "orders"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "search", "value": "JVP", "description": "Search order_code, user name/email, or product name", "disabled": true },
+                { "key": "status", "value": "pending_payment", "description": "pending_payment | paid | active_rent", "disabled": true },
+                { "key": "category_id", "value": "1", "disabled": true },
+                { "key": "pickup_location_id", "value": "1", "disabled": true },
+                { "key": "start_date", "value": "2026-11-01", "disabled": true },
+                { "key": "end_date", "value": "2026-11-30", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Order Detail (CMS)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/cms/orders/1", "host": ["{{base_url}}"], "path": ["cms", "orders", "1"] }
+          }
+        },
+        {
+          "name": "Update Order Status (CMS)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"active_rent\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/cms/orders/1/status", "host": ["{{base_url}}"], "path": ["cms", "orders", "1", "status"] }
+          }
+        },
+        {
+          "name": "Delete Order (CMS Soft Delete)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/cms/orders/1", "host": ["{{base_url}}"], "path": ["cms", "orders", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "12. Admin CMS - Users",
+      "item": [
+        {
+          "name": "List Users (CMS)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cms/users?page=1&limit=10&search=admin&role=admin&is_active=true&start_date=2026-11-01&end_date=2026-11-30",
+              "host": ["{{base_url}}"],
+              "path": ["cms", "users"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "search", "value": "admin", "disabled": true },
+                { "key": "role", "value": "admin", "description": "admin | customer", "disabled": true },
+                { "key": "is_active", "value": "true", "disabled": true },
+                { "key": "start_date", "value": "2026-11-01", "disabled": true },
+                { "key": "end_date", "value": "2026-11-30", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update User Active Status (CMS)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"is_active\": true\n}"
+            },
+            "url": { "raw": "{{base_url}}/cms/users/1/status", "host": ["{{base_url}}"], "path": ["cms", "users", "1", "status"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "13. Admin CMS - Contact Messages",
+      "item": [
+        {
+          "name": "List Contact Messages (CMS)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cms/contacts?page=1&limit=10&search=Winter&status=unread&start_date=2026-11-01&end_date=2026-11-30",
+              "host": ["{{base_url}}"],
+              "path": ["cms", "contacts"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "search", "value": "Winter", "disabled": true },
+                { "key": "status", "value": "unread", "description": "unread | read", "disabled": true },
+                { "key": "start_date", "value": "2026-11-01", "disabled": true },
+                { "key": "end_date", "value": "2026-11-30", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Contact Status (CMS)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"read\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/cms/contacts/1/status", "host": ["{{base_url}}"], "path": ["cms", "contacts", "1", "status"] }
+          }
+        },
+        {
+          "name": "Delete Contact Message (CMS Soft Delete)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/cms/contacts/1", "host": ["{{base_url}}"], "path": ["cms", "contacts", "1"] }
+          }
+        }
+      ]
+    }
+  ]
+}
