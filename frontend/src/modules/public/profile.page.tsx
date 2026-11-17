@@ -127,11 +127,20 @@ export function PublicProfilePage() {
       ),
     },
     {
-      key: "qtyDuration",
-      header: "QTY / DURATION",
+      key: "quantity",
+      header: "QTY",
       render: (row) => (
         <span className={`${baseTypography.xs} text-surface-subtle`}>
-          {row.quantity}x &bull; {row.durationDays} Days
+          {row.quantity}x
+        </span>
+      ),
+    },
+    {
+      key: "durationDays",
+      header: "DURATION",
+      render: (row) => (
+        <span className={`${baseTypography.xs} text-surface-subtle`}>
+          {row.durationDays} {row.durationDays === 1 ? "Day" : "Days"}
         </span>
       ),
     },

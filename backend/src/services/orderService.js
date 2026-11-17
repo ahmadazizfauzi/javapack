@@ -354,14 +354,22 @@ class OrderService {
 
     if (payment_status === 'settlement' || payment_status === 'capture' || payment_status === 'paid') {
       await order.update({ status: 'paid' });
-      const product = await Product.findByPk(order.product_id);
+      const [product, user, pickupLocation] = await Promise.all([
+        Product.findByPk(order.product_id),
+        User.findByPk(order.user_id),
+        PickupLocation.findByPk(order.pickup_location_id)
+      ]);
       await this.recordRentalLog({
         order,
         productName: product ? product.name : 'Travel Gear',
         eventStatus: 'paid',
         note: 'Payment confirmed via webhook'
       });
-      await N8nService.triggerOrderPaidWebhook(order);
+      await N8nService.triggerOrderPaidWebhook(order, {
+        user,
+        product,
+        pickupLocation
+      });
     }
 
     return order;

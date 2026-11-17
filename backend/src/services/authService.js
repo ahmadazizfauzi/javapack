@@ -27,9 +27,18 @@ class AuthService {
   }
 
   static async register({ name, email, password, phone }) {
+    const normalizedPhone = String(phone).trim();
+
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       const error = new Error('Email is already registered');
+      error.statusCode = 400;
+      throw error;
+    }
+
+    const existingPhone = await User.findOne({ where: { phone: normalizedPhone } });
+    if (existingPhone) {
+      const error = new Error('Phone number is already registered');
       error.statusCode = 400;
       throw error;
     }
@@ -39,7 +48,7 @@ class AuthService {
       name,
       email,
       password: hashedPassword,
-      phone: phone || null,
+      phone: normalizedPhone,
       role: 'customer'
     });
 
@@ -110,9 +119,30 @@ class AuthService {
 
   static async updateProfile(userId, { name, phone }) {
     const user = await this.getProfile(userId);
+    let nextPhone = user.phone;
+
+    if (phone !== undefined) {
+      const normalizedPhone = String(phone).trim();
+      if (!normalizedPhone) {
+        const error = new Error('Phone number cannot be empty');
+        error.statusCode = 400;
+        throw error;
+      }
+
+      if (normalizedPhone !== user.phone) {
+        const existingPhone = await User.findOne({ where: { phone: normalizedPhone } });
+        if (existingPhone && existingPhone.id !== userId) {
+          const error = new Error('Phone number is already registered');
+          error.statusCode = 400;
+          throw error;
+        }
+      }
+      nextPhone = normalizedPhone;
+    }
+
     await user.update({
       name: name !== undefined ? name : user.name,
-      phone: phone !== undefined ? phone : user.phone
+      phone: nextPhone
     });
     return user;
   }

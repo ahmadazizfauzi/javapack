@@ -239,7 +239,6 @@ export function OrderModal({
             onClick={handleCheckout}
           >
             <span>Process</span>
-            <ArrowRight className="h-4 w-4" />
           </BaseButton>
         </div>
       </BaseModal>

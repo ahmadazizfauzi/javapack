@@ -16,6 +16,7 @@ export function RegisterForm() {
   const router = useRouter();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [toast, setToast] = useState<{
@@ -37,6 +38,7 @@ export function RegisterForm() {
       const { user } = await registerAction({
         name: fullName,
         email,
+        phone,
         password,
       });
       setToast({
@@ -99,6 +101,15 @@ export function RegisterForm() {
             placeholder="name@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+
+          <BaseInput
+            label="WhatsApp / Phone Number"
+            type="tel"
+            placeholder="081234567890"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
             required
           />
 

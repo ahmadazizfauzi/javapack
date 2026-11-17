@@ -5,8 +5,8 @@ class AuthController {
   static async register(req, res, next) {
     try {
       const { name, email, password, phone } = req.body;
-      if (!name || !email || !password) {
-        return ApiResponse.badRequest(res, 'Name, email, and password are required');
+      if (!name || !email || !password || !phone || !String(phone).trim()) {
+        return ApiResponse.badRequest(res, 'Name, email, phone, and password are required');
       }
 
       const result = await AuthService.register({ name, email, password, phone });

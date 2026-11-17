@@ -1,0 +1,128 @@
+{
+  "name": "JavaPack - Order Paid WhatsApp Notification (WAHA)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "javapack-order",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "javapack-webhook-node",
+      "name": "Webhook: Order Paid",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "javapack-order"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body || $input.first().json || {};\n\nconst rawPhone = String(body.customer_phone || '');\nconst digits = rawPhone.replace(/\\D/g, '');\nlet phone62 = '';\nif (digits.length >= 9) {\n  if (digits.startsWith('0')) {\n    phone62 = '62' + digits.slice(1);\n  } else if (digits.startsWith('62')) {\n    phone62 = digits;\n  } else {\n    phone62 = '62' + digits;\n  }\n}\n\nconst chatId = phone62 ? `${phone62}@c.us` : '';\nconst isValidPhone = Boolean(chatId && phone62.length >= 10 && phone62.length <= 15);\n\nconst amountNum = Number(body.total_amount || 0);\nconst formattedTotal = new Intl.NumberFormat('id-ID').format(amountNum);\n\nconst customerName = body.customer_name || 'Customer';\nconst productName = body.product_name || 'Travel Gear';\nconst pickupLocation = body.pickup_location_name || '-';\nconst orderCode = body.order_code || '-';\nconst qty = body.quantity || 1;\nconst startDate = body.start_date || '-';\nconst endDate = body.end_date || '-';\nconst durationDays = body.duration_days || 1;\n\nconst messageText = [\n  `Halo *${customerName}*!`,\n  '',\n  'Pembayaran sewa perlengkapan *JavaPack* kamu sudah berhasil dikonfirmasi.',\n  '',\n  `*Kode Order:* ${orderCode}`,\n  `*Produk:* ${productName} (${qty} unit)`,\n  `*Lokasi Pickup:* ${pickupLocation}`,\n  `*Tanggal Sewa:* ${startDate} s/d ${endDate} (${durationDays} hari)`,\n  `*Total Bayar:* Rp ${formattedTotal}`,\n  '*Status:* PAID',\n  '',\n  'Silakan tunjukkan kode order ini saat pengambilan gear di lokasi pickup. Terima kasih telah memilih JavaPack!'\n].join('\\n');\n\nreturn [\n  {\n    json: {\n      ...body,\n      phone62,\n      chatId,\n      isValidPhone,\n      messageText\n    }\n  }\n];"
+      },
+      "id": "javapack-format-node",
+      "name": "Format Payload & Nomor WA",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "check-valid-phone",
+              "leftValue": "={{ $json.isValidPhone }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "javapack-if-valid-phone",
+      "name": "Cek Nomor WA Valid",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        720,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://waha:3000/api/sendText",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"session\": \"default\",\n  \"chatId\": {{ JSON.stringify($json.chatId) }},\n  \"text\": {{ JSON.stringify($json.messageText) }}\n}",
+        "options": {}
+      },
+      "id": "javapack-waha-send",
+      "name": "WAHA: Kirim Konfirmasi WA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        980,
+        240
+      ],
+      "continueOnFail": true
+    }
+  ],
+  "connections": {
+    "Webhook: Order Paid": {
+      "main": [
+        [
+          {
+            "node": "Format Payload & Nomor WA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Payload & Nomor WA": {
+      "main": [
+        [
+          {
+            "node": "Cek Nomor WA Valid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cek Nomor WA Valid": {
+      "main": [
+        [
+          {
+            "node": "WAHA: Kirim Konfirmasi WA",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": []
+}

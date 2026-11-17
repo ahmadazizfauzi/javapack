@@ -25,7 +25,8 @@ module.exports = {
       },
       phone: {
         type: Sequelize.STRING(20),
-        allowNull: true
+        allowNull: false,
+        unique: true
       },
       avatar_url: {
         type: Sequelize.STRING(255),
