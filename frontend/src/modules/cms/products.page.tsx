@@ -268,7 +268,14 @@ export function CmsProductsPage() {
       key: "name",
       header: "PRODUCT NAME",
       render: (row) => (
-        <span className="font-semibold text-surface-foreground">{row.name}</span>
+        <div className="flex items-center gap-3">
+          <img
+            src={row.imageUrl || "/images/travel-luggage.jpg"}
+            alt={row.name}
+            className="h-10 w-10 shrink-0 rounded-lg border border-surface-elevated object-cover bg-surface-sidebar"
+          />
+          <span className="font-semibold text-surface-foreground">{row.name}</span>
+        </div>
       ),
     },
     {
