@@ -13,7 +13,6 @@ import {
   fetchPublicPickupLocations,
   fetchPublicProducts,
   PublicProductsPagination,
-  recordSiteVisit,
 } from "./actions/public.action";
 import { ProductCatalogSection } from "./components/ProductCatalogSection";
 
@@ -39,7 +38,6 @@ export function PublicProductsPage() {
 
   useEffect(() => {
     let active = true;
-    recordSiteVisit("products");
 
     Promise.all([
       fetchPublicCategories(),

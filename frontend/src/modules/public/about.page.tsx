@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { AboutContent } from "@/types/public.type";
 import { baseTypography } from "@/tokens/base_typography";
-import { fetchPublicAboutUs, recordSiteVisit } from "./actions/public.action";
+import { fetchPublicAboutUs } from "./actions/public.action";
 import { AboutSection } from "./components/AboutSection";
 
 export function PublicAboutPage() {
@@ -12,7 +12,6 @@ export function PublicAboutPage() {
 
   useEffect(() => {
     let active = true;
-    recordSiteVisit("about");
 
     fetchPublicAboutUs()
       .then((res) => {

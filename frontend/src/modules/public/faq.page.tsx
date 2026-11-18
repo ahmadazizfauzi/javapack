@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { BaseSkeleton } from "@/components/ui/base_skeleton";
 import { PublicFaqItem } from "@/types/public.type";
-import { fetchPublicFaqs, recordSiteVisit } from "./actions/public.action";
+import { fetchPublicFaqs } from "./actions/public.action";
 import { FaqSection } from "./components/FaqSection";
 
 export function PublicFaqPage() {
@@ -12,7 +12,6 @@ export function PublicFaqPage() {
 
   useEffect(() => {
     let active = true;
-    recordSiteVisit("faq");
 
     fetchPublicFaqs()
       .then((data) => {

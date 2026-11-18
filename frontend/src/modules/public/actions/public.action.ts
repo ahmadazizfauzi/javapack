@@ -305,8 +305,12 @@ export async function fetchPublicContactInfo(): Promise<ContactInfo | null> {
   };
 }
 
+let hasRecordedVisitThisLoad = false;
+
 export async function recordSiteVisit(page: string): Promise<void> {
   if (typeof window === "undefined") return;
+  if (page !== "home" || hasRecordedVisitThisLoad) return;
+  hasRecordedVisitThisLoad = true;
   let token = localStorage.getItem("javapack_visitor_token");
   if (!token) {
     token = `vis_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;

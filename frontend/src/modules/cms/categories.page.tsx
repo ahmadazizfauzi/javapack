@@ -196,6 +196,15 @@ export function CmsCategoriesPage() {
       ),
     },
     {
+      key: "description",
+      header: "DESCRIPTION",
+      render: (row) => (
+        <span className={`line-clamp-2 max-w-md ${baseTypography.xs} text-surface-subtle`}>
+          {row.description || "-"}
+        </span>
+      ),
+    },
+    {
       key: "actions",
       header: "ACTIONS",
       align: "right",

@@ -2,10 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { ContactInfo } from "@/types/public.type";
-import {
-  fetchPublicContactInfo,
-  recordSiteVisit,
-} from "./actions/public.action";
+import { fetchPublicContactInfo } from "./actions/public.action";
 import { ContactSection } from "./components/ContactSection";
 
 export function PublicContactPage() {
@@ -14,7 +11,6 @@ export function PublicContactPage() {
 
   useEffect(() => {
     let active = true;
-    recordSiteVisit("contact");
 
     fetchPublicContactInfo()
       .then((res) => {
