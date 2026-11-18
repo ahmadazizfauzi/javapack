@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { BaseSkeleton } from "@/components/ui/base_skeleton";
 import { PublicFaqItem } from "@/types/public.type";
 import { fetchPublicFaqs } from "./actions/public.action";
-import { FaqSection } from "./components/FaqSection";
+import { FaqSection } from "./components/faq/FaqSection";
 
 export function PublicFaqPage() {
   const [items, setItems] = useState<PublicFaqItem[]>([]);

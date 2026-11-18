@@ -17,8 +17,11 @@ class UrlHelper {
     if (/^https?:\/\//i.test(pathOrUrl)) {
       return pathOrUrl;
     }
-    const baseUrl = this.getAppBaseUrl();
     const normalizedPath = pathOrUrl.startsWith('/') ? pathOrUrl : `/${pathOrUrl}`;
+    if (normalizedPath.startsWith('/images/')) {
+      return normalizedPath;
+    }
+    const baseUrl = this.getAppBaseUrl();
     return baseUrl ? `${baseUrl}${normalizedPath}` : normalizedPath;
   }
 }

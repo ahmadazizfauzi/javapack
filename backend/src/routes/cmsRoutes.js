@@ -28,10 +28,6 @@ router.delete('/contacts/:id', CmsController.deleteContact);
 router.get('/about-us', CmsController.getAboutUs);
 router.put('/about-us', CmsController.updateAboutUs);
 
-// CMS Home Content Management (Single Record)
-router.get('/home-content', CmsController.getHomeContent);
-router.put('/home-content', CmsController.updateHomeContent);
-
 // CMS Contact Info Management (Single Record)
 router.get('/contact-info', CmsController.getContactInfo);
 router.put('/contact-info', CmsController.updateContactInfo);

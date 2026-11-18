@@ -66,10 +66,15 @@ export interface CmsPickupLocationItem {
   status: "Active" | "Inactive";
 }
 
-export type BackendOrderStatus = "pending_payment" | "paid" | "active_rent";
+export type BackendOrderStatus =
+  | "pending_payment"
+  | "paid"
+  | "active_rent"
+  | "completed";
 
 export interface CmsOrderItem {
   id: string;
+  createdAt: string;
   bookingCode: string;
   customerName: string;
   productName: string;
@@ -111,11 +116,27 @@ export interface CmsAboutContent {
   sideImageUrl: string;
 }
 
-export interface CmsHomeContent {
+export interface CmsHomeStepItem {
   id: string;
-  badgeText: string;
-  headline: string;
-  subheadline: string;
+  createdAt: string;
+  stepLabel: string;
+  title: string;
+  description: string;
+  sortOrder: number;
+  isActive: boolean;
+  status: "Published" | "Draft";
+}
+
+export interface CmsHomeStoryItem {
+  id: string;
+  createdAt: string;
+  customerName: string;
+  gearTag: string;
+  testimonial: string;
+  imageUrl: string;
+  sortOrder: number;
+  isActive: boolean;
+  status: "Published" | "Draft";
 }
 
 export interface CmsContactInfo {

@@ -43,7 +43,11 @@ class MasterCrudService {
     const { rows, count } = await Model.findAndCountAll({
       where,
       include: options.include || [],
-      order: options.order || [['id', 'DESC']],
+      order: PaginationHelper.buildSortOrder(
+        query,
+        options.sortFields || ['id', 'created_at', 'updated_at'],
+        options.order || [['id', 'DESC']]
+      ),
       limit,
       offset
     });

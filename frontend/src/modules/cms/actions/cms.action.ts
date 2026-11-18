@@ -9,7 +9,8 @@ import {
   CmsContactItem,
   CmsFaqItem,
   CmsHeroBannerItem,
-  CmsHomeContent,
+  CmsHomeStepItem,
+  CmsHomeStoryItem,
   CmsOrderItem,
   CmsPaginatedResult,
   CmsPagination,
@@ -59,6 +60,8 @@ export async function fetchCmsCategories(params?: {
   search?: string;
   page?: number;
   limit?: number;
+  sort_by?: string;
+  sort_dir?: "ASC" | "DESC";
 }): Promise<CmsPaginatedResult<CmsCategoryItem>> {
   const res = await axiosInstance.get<ApiEnvelope<RawPaginated<RawCategory>>>(
     "/categories",
@@ -116,6 +119,8 @@ export async function fetchCmsProducts(params?: {
   category_id?: string;
   page?: number;
   limit?: number;
+  sort_by?: string;
+  sort_dir?: "ASC" | "DESC";
 }): Promise<CmsPaginatedResult<CmsProductItem>> {
   const res = await axiosInstance.get<ApiEnvelope<RawPaginated<RawProduct>>>(
     "/products",
@@ -191,6 +196,8 @@ export async function fetchCmsHeroBanners(params?: {
   search?: string;
   page?: number;
   limit?: number;
+  sort_by?: string;
+  sort_dir?: "ASC" | "DESC";
 }): Promise<CmsPaginatedResult<CmsHeroBannerItem>> {
   const res = await axiosInstance.get<ApiEnvelope<RawPaginated<RawHeroBanner>>>(
     "/hero-banners",
@@ -254,6 +261,8 @@ export async function fetchCmsFaqs(params?: {
   search?: string;
   page?: number;
   limit?: number;
+  sort_by?: string;
+  sort_dir?: "ASC" | "DESC";
 }): Promise<CmsPaginatedResult<CmsFaqItem>> {
   const res = await axiosInstance.get<ApiEnvelope<RawPaginated<RawFaq>>>(
     "/faqs",
@@ -309,6 +318,8 @@ export async function fetchCmsPickupLocations(params?: {
   search?: string;
   page?: number;
   limit?: number;
+  sort_by?: string;
+  sort_dir?: "ASC" | "DESC";
 }): Promise<CmsPaginatedResult<CmsPickupLocationItem>> {
   const res = await axiosInstance.get<
     ApiEnvelope<RawPaginated<RawPickupLocation>>
@@ -356,6 +367,7 @@ interface RawOrder {
   end_date: string;
   total_amount: number | string;
   status: BackendOrderStatus;
+  created_at?: string;
   user?: { name: string };
   product?: { name: string };
 }
@@ -365,6 +377,8 @@ export async function fetchCmsOrders(params?: {
   status?: string;
   page?: number;
   limit?: number;
+  sort_by?: string;
+  sort_dir?: "ASC" | "DESC";
 }): Promise<CmsPaginatedResult<CmsOrderItem>> {
   const res = await axiosInstance.get<ApiEnvelope<RawPaginated<RawOrder>>>(
     "/cms/orders",
@@ -374,6 +388,7 @@ export async function fetchCmsOrders(params?: {
     pagination: res.data.data.pagination,
     items: res.data.data.items.map((o) => ({
       id: String(o.id),
+      createdAt: safeDate(o.created_at),
       bookingCode: o.order_code,
       customerName: o.user?.name || "-",
       productName: o.product?.name || "-",
@@ -412,6 +427,8 @@ export async function fetchCmsUsers(params?: {
   role?: string;
   page?: number;
   limit?: number;
+  sort_by?: string;
+  sort_dir?: "ASC" | "DESC";
 }): Promise<CmsPaginatedResult<CmsUserItem>> {
   const res = await axiosInstance.get<ApiEnvelope<RawPaginated<RawUser>>>(
     "/cms/users",
@@ -452,6 +469,8 @@ export async function fetchCmsContacts(params?: {
   status?: string;
   page?: number;
   limit?: number;
+  sort_by?: string;
+  sort_dir?: "ASC" | "DESC";
 }): Promise<CmsPaginatedResult<CmsContactItem>> {
   const res = await axiosInstance.get<ApiEnvelope<RawPaginated<RawContact>>>(
     "/cms/contacts",
@@ -544,43 +563,140 @@ export async function uploadCmsImage(file: File): Promise<string> {
   return res.data.data.url;
 }
 
-// --- Home Content (Single Record) ---
-interface RawHomeContent {
+// --- Home Steps (How It Works Timeline) ---
+interface RawHomeStep {
   id: number;
-  badge_text: string;
-  headline: string;
-  subheadline: string;
+  step_label: string;
+  title: string;
+  description: string;
+  sort_order: number;
+  is_active: boolean;
+  created_at?: string;
 }
 
-export async function fetchCmsHomeContent(): Promise<CmsHomeContent> {
-  const res = await axiosInstance.get<ApiEnvelope<RawHomeContent>>(
-    "/cms/home-content"
+export async function fetchCmsHomeSteps(params?: {
+  search?: string;
+  is_active?: string;
+  page?: number;
+  limit?: number;
+  sort_by?: string;
+  sort_dir?: "ASC" | "DESC";
+}): Promise<CmsPaginatedResult<CmsHomeStepItem>> {
+  const res = await axiosInstance.get<ApiEnvelope<RawPaginated<RawHomeStep>>>(
+    "/home-steps",
+    { params }
   );
-  const d = res.data.data;
   return {
-    id: String(d.id),
-    badgeText: d.badge_text || "",
-    headline: d.headline || "",
-    subheadline: d.subheadline || "",
+    pagination: res.data.data.pagination,
+    items: res.data.data.items.map((s) => ({
+      id: String(s.id),
+      createdAt: safeDate(s.created_at),
+      stepLabel: s.step_label,
+      title: s.title,
+      description: s.description,
+      sortOrder: Number(s.sort_order) || 1,
+      isActive: Boolean(s.is_active),
+      status: s.is_active ? "Published" : "Draft",
+    })),
   };
 }
 
-export async function updateCmsHomeContent(payload: {
-  badge_text: string;
-  headline: string;
-  subheadline: string;
-}): Promise<CmsHomeContent> {
-  const res = await axiosInstance.put<ApiEnvelope<RawHomeContent>>(
-    "/cms/home-content",
-    payload
+export async function createCmsHomeStep(payload: {
+  step_label: string;
+  title: string;
+  description: string;
+  sort_order?: number;
+  is_active?: boolean;
+}) {
+  return axiosInstance.post("/home-steps", payload);
+}
+
+export async function updateCmsHomeStep(
+  id: string,
+  payload: {
+    step_label?: string;
+    title?: string;
+    description?: string;
+    sort_order?: number;
+    is_active?: boolean;
+  }
+) {
+  return axiosInstance.put(`/home-steps/${id}`, payload);
+}
+
+export async function deleteCmsHomeStep(id: string) {
+  return axiosInstance.delete(`/home-steps/${id}`);
+}
+
+// --- Home Stories (Traveler Stories Gallery) ---
+interface RawHomeStory {
+  id: number;
+  customer_name: string;
+  gear_tag: string;
+  testimonial: string;
+  image_url: string;
+  sort_order: number;
+  is_active: boolean;
+  created_at?: string;
+}
+
+export async function fetchCmsHomeStories(params?: {
+  search?: string;
+  page?: number;
+  limit?: number;
+  sort_by?: string;
+  sort_dir?: "ASC" | "DESC";
+}): Promise<CmsPaginatedResult<CmsHomeStoryItem>> {
+  const res = await axiosInstance.get<ApiEnvelope<RawPaginated<RawHomeStory>>>(
+    "/home-stories",
+    { params }
   );
-  const d = res.data.data;
   return {
-    id: String(d.id),
-    badgeText: d.badge_text || "",
-    headline: d.headline || "",
-    subheadline: d.subheadline || "",
+    pagination: res.data.data.pagination,
+    items: res.data.data.items.map((st) => ({
+      id: String(st.id),
+      createdAt: safeDate(st.created_at),
+      customerName: st.customer_name,
+      gearTag: st.gear_tag,
+      testimonial: st.testimonial,
+      imageUrl: resolveCmsAssetUrl(
+        st.image_url,
+        "/images/stories/story-family-modem.jpg"
+      ),
+      sortOrder: Number(st.sort_order) || 1,
+      isActive: Boolean(st.is_active),
+      status: st.is_active ? "Published" : "Draft",
+    })),
   };
+}
+
+export async function createCmsHomeStory(payload: {
+  customer_name: string;
+  gear_tag: string;
+  testimonial: string;
+  image_url: string;
+  sort_order?: number;
+  is_active?: boolean;
+}) {
+  return axiosInstance.post("/home-stories", payload);
+}
+
+export async function updateCmsHomeStory(
+  id: string,
+  payload: {
+    customer_name?: string;
+    gear_tag?: string;
+    testimonial?: string;
+    image_url?: string;
+    sort_order?: number;
+    is_active?: boolean;
+  }
+) {
+  return axiosInstance.put(`/home-stories/${id}`, payload);
+}
+
+export async function deleteCmsHomeStory(id: string) {
+  return axiosInstance.delete(`/home-stories/${id}`);
 }
 
 // --- Contact Info (Single Record) ---

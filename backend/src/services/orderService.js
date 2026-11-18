@@ -74,7 +74,11 @@ class OrderService {
         { model: Product, as: 'product', attributes: ['id', 'name', 'slug', 'image_url', 'price_per_day'] },
         { model: PickupLocation, as: 'pickupLocation', attributes: ['id', 'name', 'city', 'address'] }
       ],
-      order: [['created_at', 'DESC']],
+      order: PaginationHelper.buildSortOrder(
+        query,
+        ['id', 'created_at', 'total_amount', 'start_date'],
+        [['created_at', 'DESC'], ['id', 'DESC']]
+      ),
       limit,
       offset
     });
@@ -88,7 +92,11 @@ class OrderService {
     const { rows, count } = await RentalHistoryLog.findAndCountAll({
       where: { user_id: userId },
       include: [{ model: Order, as: 'order', attributes: ['id', 'payment_url', 'status'] }],
-      order: [['created_at', 'DESC'], ['id', 'DESC']],
+      order: PaginationHelper.buildSortOrder(
+        query,
+        ['id', 'created_at'],
+        [['created_at', 'DESC'], ['id', 'DESC']]
+      ),
       limit,
       offset
     });

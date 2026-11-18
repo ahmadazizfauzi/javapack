@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { AboutContent } from "@/types/public.type";
 import { baseTypography } from "@/tokens/base_typography";
 import { fetchPublicAboutUs } from "./actions/public.action";
-import { AboutSection } from "./components/AboutSection";
+import { AboutSection } from "./components/about/AboutSection";
 
 export function PublicAboutPage() {
   const [content, setContent] = useState<AboutContent | null>(null);

@@ -30,6 +30,31 @@ class PaginationHelper {
     return { [field]: range };
   }
 
+  static buildSortOrder(
+    query = {},
+    allowedFields = ['id', 'created_at'],
+    defaultOrder = [['id', 'ASC']]
+  ) {
+    const rawDir = String(query.sort_dir || '').toUpperCase();
+    const rawField = String(query.sort_by || '').trim();
+    const hasValidField = Boolean(rawField && allowedFields.includes(rawField));
+    const hasValidDir = rawDir === 'ASC' || rawDir === 'DESC';
+
+    if (!hasValidField && !hasValidDir) {
+      return defaultOrder;
+    }
+
+    const fallbackField = defaultOrder[0] ? defaultOrder[0][0] : 'id';
+    const fallbackDir = defaultOrder[0] ? defaultOrder[0][1] : 'ASC';
+    const field = hasValidField ? rawField : fallbackField;
+    const dir = hasValidDir ? rawDir : fallbackDir;
+
+    if (field === 'id') {
+      return [['id', dir]];
+    }
+    return [[field, dir], ['id', dir]];
+  }
+
   static formatPaginatedResponse(rows, count, page, limit) {
     return {
       items: rows,

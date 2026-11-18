@@ -152,28 +152,6 @@ class CmsController {
     }
   }
 
-  static async getHomeContent(req, res, next) {
-    try {
-      const data = await CmsService.getHomeContent();
-      return ApiResponse.success(res, 'Home content retrieved successfully', data);
-    } catch (error) {
-      return next(error);
-    }
-  }
-
-  static async updateHomeContent(req, res, next) {
-    try {
-      const { badge_text, headline, subheadline } = req.body;
-      if (!badge_text || !headline || !subheadline) {
-        return ApiResponse.badRequest(res, 'badge_text, headline, and subheadline are required');
-      }
-      const data = await CmsService.updateHomeContent(req.body);
-      return ApiResponse.success(res, 'Home content updated successfully', data);
-    } catch (error) {
-      return next(error);
-    }
-  }
-
   static async getContactInfo(req, res, next) {
     try {
       const data = await CmsService.getContactInfo();

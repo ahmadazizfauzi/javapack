@@ -22,10 +22,10 @@ module.exports = {
       }
     ].map((item) => ({ ...item, is_active: true, created_at: now, updated_at: now }));
 
-    await queryInterface.bulkInsert('faqs', faqs, {});
+    await queryInterface.bulkInsert('faqs_contents', faqs, {});
   },
 
   async down(queryInterface) {
-    await queryInterface.bulkDelete('faqs', null, {});
+    await queryInterface.bulkDelete('faqs_contents', null, {});
   }
 };

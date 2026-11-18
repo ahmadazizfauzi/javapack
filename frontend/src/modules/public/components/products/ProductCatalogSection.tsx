@@ -13,7 +13,7 @@ import {
 import {
   fetchPublicProducts,
   PublicProductsPagination,
-} from "../actions/public.action";
+} from "../../actions/public.action";
 import { ProductCard } from "./ProductCard";
 import { OrderModal } from "./OrderModal";
 import { baseTypography } from "@/tokens/base_typography";

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { ContactInfo } from "@/types/public.type";
 import { fetchPublicContactInfo } from "./actions/public.action";
-import { ContactSection } from "./components/ContactSection";
+import { ContactSection } from "./components/contact/ContactSection";
 
 export function PublicContactPage() {
   const [info, setInfo] = useState<ContactInfo | null>(null);

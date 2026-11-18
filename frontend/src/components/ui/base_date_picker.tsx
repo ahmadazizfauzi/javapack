@@ -38,9 +38,10 @@ const SHORT_DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const GRID_DAY_HEADERS = ["S", "M", "T", "W", "T", "F", "S"];
 
 export interface BaseDatePickerProps {
-  value: Date;
+  value: Date | null;
   onChange: (date: Date) => void;
   displayMode?: "month-year" | "full-date";
+  placeholder?: string;
   className?: string;
 }
 
@@ -56,17 +57,20 @@ export function BaseDatePicker({
   value,
   onChange,
   displayMode = "month-year",
+  placeholder = "Select date",
   className = "",
 }: BaseDatePickerProps) {
+  const fallbackDate = value ?? new Date();
   const [isOpen, setIsOpen] = useState(false);
-  const [draftDate, setDraftDate] = useState<Date>(value);
-  const [viewYear, setViewYear] = useState<number>(value.getFullYear());
-  const [viewMonth, setViewMonth] = useState<number>(value.getMonth());
+  const [draftDate, setDraftDate] = useState<Date>(fallbackDate);
+  const [viewYear, setViewYear] = useState<number>(fallbackDate.getFullYear());
+  const [viewMonth, setViewMonth] = useState<number>(fallbackDate.getMonth());
 
   const openDialog = () => {
-    setDraftDate(value);
-    setViewYear(value.getFullYear());
-    setViewMonth(value.getMonth());
+    const initial = value ?? new Date();
+    setDraftDate(initial);
+    setViewYear(initial.getFullYear());
+    setViewMonth(initial.getMonth());
     setIsOpen(true);
   };
 
@@ -102,8 +106,9 @@ export function BaseDatePicker({
     return cells;
   }, [viewYear, viewMonth]);
 
-  const triggerLabel =
-    displayMode === "month-year"
+  const triggerLabel = !value
+    ? placeholder
+    : displayMode === "month-year"
       ? `${MONTH_NAMES[value.getMonth()]} ${value.getFullYear()}`
       : formatHeadlineDate(value);
 
@@ -112,7 +117,9 @@ export function BaseDatePicker({
       <button
         type="button"
         onClick={openDialog}
-        className={`flex h-10 items-center gap-2 rounded-lg border border-surface-border bg-surface-sidebar px-3.5 ${baseTypography.xs} font-medium text-surface-foreground transition-colors hover:border-surface-muted focus:border-indigo-600 focus:outline-none ${className}`}
+        className={`flex h-10 items-center gap-2 rounded-lg border border-surface-border bg-surface-sidebar px-3.5 ${baseTypography.xs} font-medium transition-colors hover:border-surface-muted focus:border-indigo-600 focus:outline-none ${
+          value ? "text-surface-foreground" : "text-surface-muted"
+        } ${className}`}
       >
         <Calendar className="h-3.5 w-3.5 text-surface-subtle" />
         <span>{triggerLabel}</span>

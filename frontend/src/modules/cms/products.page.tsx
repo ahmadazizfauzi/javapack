@@ -48,6 +48,7 @@ export function CmsProductsPage() {
 
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const [sortDir, setSortDir] = useState<"DESC" | "ASC">("ASC");
   const [selectedDate, setSelectedDate] = useState<Date>(
     () => new Date(2026, 10, 17)
   );
@@ -81,6 +82,8 @@ export function CmsProductsPage() {
         fetchCmsProducts({
           search,
           category_id: categoryFilter !== "all" ? categoryFilter : undefined,
+          sort_by: "id",
+          sort_dir: sortDir,
           page,
           limit: 10,
         }),
@@ -102,7 +105,7 @@ export function CmsProductsPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [search, categoryFilter, page]);
+  }, [search, categoryFilter, sortDir, page]);
 
   useEffect(() => {
     loadData();
@@ -386,6 +389,11 @@ export function CmsProductsPage() {
           filterValue={categoryFilter}
           onFilterChange={(val) => {
             setCategoryFilter(val);
+            setPage(1);
+          }}
+          sortValue={sortDir}
+          onSortChange={(val) => {
+            setSortDir(val);
             setPage(1);
           }}
           selectedDate={selectedDate}

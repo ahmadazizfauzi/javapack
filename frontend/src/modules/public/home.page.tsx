@@ -2,18 +2,28 @@
 
 import React, { useEffect, useState } from "react";
 import { BaseSkeleton } from "@/components/ui/base_skeleton";
-import { HeroBannerItem, HomeContent } from "@/types/public.type";
 import {
-  DEFAULT_HOME_CONTENT,
+  HeroBannerItem,
+  HomeStepItem,
+  HomeStoryItem,
+} from "@/types/public.type";
+import {
+  DEFAULT_HOME_STEPS,
+  DEFAULT_HOME_STORIES,
   fetchPublicHomeData,
   recordSiteVisit,
 } from "./actions/public.action";
-import { HeroSliderSection } from "./components/HeroSliderSection";
+import { FullHeroSection } from "./components/home/FullHeroSection";
+import { HeroSliderSection } from "./components/home/HeroSliderSection";
+import { HowItWorksTimelineSection } from "./components/home/HowItWorksTimelineSection";
+import { TravelerStoriesSection } from "./components/home/TravelerStoriesSection";
 
 export function PublicHomePage() {
   const [banners, setBanners] = useState<HeroBannerItem[]>([]);
-  const [homeContent, setHomeContent] =
-    useState<HomeContent>(DEFAULT_HOME_CONTENT);
+  const [homeSteps, setHomeSteps] =
+    useState<HomeStepItem[]>(DEFAULT_HOME_STEPS);
+  const [homeStories, setHomeStories] =
+    useState<HomeStoryItem[]>(DEFAULT_HOME_STORIES);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -24,7 +34,8 @@ export function PublicHomePage() {
       .then((data) => {
         if (!active) return;
         setBanners(data.banners);
-        setHomeContent(data.homeContent);
+        setHomeSteps(data.homeSteps);
+        setHomeStories(data.homeStories);
       })
       .finally(() => {
         if (active) setIsLoading(false);
@@ -39,5 +50,12 @@ export function PublicHomePage() {
     return <BaseSkeleton variant="heroSlider" />;
   }
 
-  return <HeroSliderSection banners={banners} homeContent={homeContent} />;
+  return (
+    <>
+      <FullHeroSection />
+      <HeroSliderSection banners={banners} />
+      <HowItWorksTimelineSection steps={homeSteps} />
+      <TravelerStoriesSection stories={homeStories} />
+    </>
+  );
 }

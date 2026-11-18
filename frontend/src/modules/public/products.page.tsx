@@ -14,7 +14,7 @@ import {
   fetchPublicProducts,
   PublicProductsPagination,
 } from "./actions/public.action";
-import { ProductCatalogSection } from "./components/ProductCatalogSection";
+import { ProductCatalogSection } from "./components/products/ProductCatalogSection";
 
 export function PublicProductsPage() {
   const searchParams = useSearchParams();

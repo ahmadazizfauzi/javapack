@@ -7,7 +7,8 @@ const {
   Faq,
   ContactMessage,
   AboutContent,
-  HomeContent,
+  HomeStep,
+  HomeStory,
   ContactInfo
 } = require('../models');
 const PaginationHelper = require('../helpers/paginationHelper');
@@ -29,7 +30,7 @@ class PublicService {
   static async getHomeData(query = {}) {
     const { page, limit, offset } = PaginationHelper.getPaginationParams(query);
 
-    const [banners, categories, pickupLocations, productResult, homeContent] = await Promise.all([
+    const [banners, categories, pickupLocations, productResult, homeSteps, homeStories] = await Promise.all([
       HeroBanner.findAll({
         where: { is_active: true },
         order: [['sort_order', 'ASC'], ['id', 'ASC']]
@@ -52,16 +53,19 @@ class PublicService {
         limit,
         offset
       }),
-      HomeContent.findOne({ order: [['id', 'ASC']] })
+      HomeStep.findAll({
+        where: { is_active: true },
+        order: [['sort_order', 'ASC'], ['id', 'ASC']]
+      }),
+      HomeStory.findAll({
+        where: { is_active: true },
+        order: [['sort_order', 'ASC'], ['id', 'ASC']]
+      })
     ]);
 
     return {
-      home_content: homeContent || {
-        badge_text: 'International Travel Gear Rental',
-        headline: 'Travel Lighter, Your Gear Ready at the Airport',
-        subheadline:
-          'Rent winter jackets, hardcase luggage, action cams & WiFi adapters without buying expensive gear — easy pickup at Terminal 3.'
-      },
+      home_steps: homeSteps,
+      home_stories: homeStories.map((s) => this.formatBanner(s)),
       hero_banners: banners.map((b) => this.formatBanner(b)),
       categories,
       pickup_locations: pickupLocations,
@@ -104,7 +108,11 @@ class PublicService {
         { model: Category, as: 'category', attributes: ['id', 'name', 'slug'] },
         { model: PickupLocation, as: 'pickupLocation', attributes: ['id', 'name', 'city', 'address', 'operational_hours'] }
       ],
-      order: [['id', 'ASC']],
+      order: PaginationHelper.buildSortOrder(
+        query,
+        ['id', 'created_at', 'name', 'price_per_day'],
+        [['id', 'ASC']]
+      ),
       limit,
       offset
     });

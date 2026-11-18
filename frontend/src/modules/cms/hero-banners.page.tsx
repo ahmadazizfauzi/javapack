@@ -26,14 +26,14 @@ import {
   createCmsHeroBanner,
   deleteCmsHeroBanner,
   fetchCmsHeroBanners,
-  fetchCmsHomeContent,
   fetchCmsProducts,
   updateCmsHeroBanner,
-  updateCmsHomeContent,
   uploadCmsImage,
 } from "./actions/cms.action";
 import { CmsTableToolbar } from "./components/CmsTableToolbar";
 import { CmsActionButtons } from "./components/CmsActionButtons";
+import { HomeStepsSection } from "./components/HomeStepsSection";
+import { HomeStoriesSection } from "./components/HomeStoriesSection";
 import { baseTypography } from "@/tokens/base_typography";
 
 const statusFilterOptions = [
@@ -50,6 +50,7 @@ export function CmsHeroBannersPage() {
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [sortDir, setSortDir] = useState<"DESC" | "ASC">("ASC");
   const [selectedDate, setSelectedDate] = useState<Date>(
     () => new Date(2026, 10, 17)
   );
@@ -68,15 +69,6 @@ export function CmsHeroBannersPage() {
   const [uploadingSlideImage, setUploadingSlideImage] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [badgeText, setBadgeText] = useState("International Travel Gear Rental");
-  const [headline, setHeadline] = useState(
-    "Travel Lighter, Your Gear Ready at the Airport"
-  );
-  const [subheadline, setSubheadline] = useState(
-    "Rent winter jackets, hardcase luggage, action cams & WiFi adapters without buying expensive gear — easy pickup at Terminal 3."
-  );
-  const [isSavingHome, setIsSavingHome] = useState(false);
-
   const [deleteTarget, setDeleteTarget] = useState<CmsHeroBannerItem | null>(
     null
   );
@@ -90,7 +82,13 @@ export function CmsHeroBannersPage() {
   const loadData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await fetchCmsHeroBanners({ search, page, limit: 10 });
+      const res = await fetchCmsHeroBanners({
+        search,
+        sort_by: "id",
+        sort_dir: sortDir,
+        page,
+        limit: 10,
+      });
       setItems(res.items);
       setTotalItems(res.pagination.total);
       setTotalPages(Math.max(1, res.pagination.totalPages));
@@ -104,23 +102,13 @@ export function CmsHeroBannersPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [search, page]);
+  }, [search, sortDir, page]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
 
   useEffect(() => {
-    fetchCmsHomeContent()
-      .then((home) => {
-        setBadgeText(home.badgeText);
-        setHeadline(home.headline);
-        setSubheadline(home.subheadline);
-      })
-      .catch(() => {
-        // Keep defaults if initial fetch fails
-      });
-
     fetchCmsProducts({ limit: 50 })
       .then((prodRes) => {
         setProducts(prodRes.items);
@@ -139,46 +127,6 @@ export function CmsHeroBannersPage() {
       })),
     ];
   }, [products]);
-
-  const handleSaveHomeText = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!badgeText.trim() || !headline.trim() || !subheadline.trim()) {
-      setToast({
-        visible: true,
-        variant: "error",
-        title: "Validation Error",
-        message: "Badge text, Headline, and Subheadline are required.",
-      });
-      return;
-    }
-
-    setIsSavingHome(true);
-    try {
-      const updated = await updateCmsHomeContent({
-        badge_text: badgeText.trim(),
-        headline: headline.trim(),
-        subheadline: subheadline.trim(),
-      });
-      setBadgeText(updated.badgeText);
-      setHeadline(updated.headline);
-      setSubheadline(updated.subheadline);
-      setToast({
-        visible: true,
-        variant: "success",
-        title: "Saved",
-        message: "Home header texts updated successfully.",
-      });
-    } catch (error) {
-      setToast({
-        visible: true,
-        variant: "error",
-        title: "Save Failed",
-        message: getApiErrorMessage(error, "Failed to update Home texts."),
-      });
-    } finally {
-      setIsSavingHome(false);
-    }
-  };
 
   const handleSlideImagePick = async (file: File | undefined) => {
     if (!file) return;
@@ -389,48 +337,6 @@ export function CmsHeroBannersPage() {
         }
       />
 
-      <BaseCard padding="lg">
-        <form onSubmit={handleSaveHomeText} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1 border-b border-surface-elevated pb-3">
-            <h2 className={`${baseTypography.sm} font-bold text-surface-foreground`}>
-              Home Header Texts
-            </h2>
-            <p className={`${baseTypography.xs} text-surface-muted`}>
-              Edit the badge, main headline, and description displayed above the hero slider on the Home page.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            <BaseInput
-              label="Badge Text"
-              value={badgeText}
-              onChange={(e) => setBadgeText(e.target.value)}
-              placeholder="International Travel Gear Rental"
-              required
-            />
-            <BaseInput
-              label="Main Headline"
-              value={headline}
-              onChange={(e) => setHeadline(e.target.value)}
-              placeholder="Travel Lighter, Your Gear Ready at the Airport"
-              required
-            />
-          </div>
-          <BaseTextarea
-            label="Subheadline Description"
-            rows={3}
-            value={subheadline}
-            onChange={(e) => setSubheadline(e.target.value)}
-            placeholder="Rent winter jackets, hardcase luggage, action cams & WiFi adapters..."
-            required
-          />
-          <div className="flex justify-end">
-            <BaseButton type="submit" variant="primary" isLoading={isSavingHome}>
-              Save Changes
-            </BaseButton>
-          </div>
-        </form>
-      </BaseCard>
-
       <BaseCard padding="lg" className="flex flex-col gap-5">
         <h2 className={`${baseTypography.sm} font-bold text-surface-foreground`}>
           Hero Banner Slides List
@@ -446,6 +352,11 @@ export function CmsHeroBannersPage() {
           filterOptions={statusFilterOptions}
           filterValue={statusFilter}
           onFilterChange={setStatusFilter}
+          sortValue={sortDir}
+          onSortChange={(val) => {
+            setSortDir(val);
+            setPage(1);
+          }}
           selectedDate={selectedDate}
           onDateChange={setSelectedDate}
         />
@@ -470,6 +381,9 @@ export function CmsHeroBannersPage() {
           onPageChange={setPage}
         />
       </BaseCard>
+
+      <HomeStepsSection />
+      <HomeStoriesSection />
 
       <BaseModal
         isOpen={formOpen}

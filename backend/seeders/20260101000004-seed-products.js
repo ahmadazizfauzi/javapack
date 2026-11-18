@@ -15,6 +15,7 @@ module.exports = {
     }
 
     const categoryMap = new Map(categories.map((c) => [c.slug, c.id]));
+    const esimId = categoryMap.get('esim') ?? categories[0].id;
     const apparelId = categoryMap.get('apparel') ?? categories[0].id;
     const pocketWifiId = categoryMap.get('pocket-wifi') ?? categories[0].id;
     const bagsLuggageId = categoryMap.get('bags-and-luggage') ?? categories[0].id;
@@ -47,6 +48,15 @@ module.exports = {
         image_url: '/uploads/koper.jpg',
         price_per_day: 40000,
         stock: 15
+      },
+      {
+        category_id: esimId,
+        name: 'eSIM Japan',
+        slug: 'esim-japan',
+        description: 'Single country Japan 5G eSIM with unlimited and fixed quota options — instant QR activation.',
+        image_url: '/uploads/esim-japan.jpg',
+        price_per_day: 19000,
+        stock: 50
       }
     ];
 

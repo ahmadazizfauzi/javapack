@@ -170,7 +170,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"john.traveler@example.com\",\n    \"password\": \"password\"\n}"
+              "raw": "{\n    \"email\": \"ahmad@gmail.com\",\n    \"password\": \"password\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/auth/login",
@@ -307,7 +307,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/public/home?page=1&limit=10",
+              "raw": "{{base_url}}/public/home?page=1&limit=10&sort_by=id&sort_dir=ASC",
               "host": [
                 "{{base_url}}"
               ],
@@ -325,6 +325,14 @@
                   "key": "limit",
                   "value": "10",
                   "description": "Items per page (1 - 100)"
+                },
+                {
+                  "key": "sort_by",
+                  "value": "id"
+                },
+                {
+                  "key": "sort_dir",
+                  "value": "ASC"
                 }
               ]
             }
@@ -341,7 +349,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/public/products?page=1&limit=20&search=Japan&category_id=1",
+              "raw": "{{base_url}}/public/products?page=1&limit=20&search=Japan&category_id=1&sort_by=id&sort_dir=ASC",
               "host": [
                 "{{base_url}}"
               ],
@@ -365,6 +373,14 @@
                 {
                   "key": "category_id",
                   "value": "1"
+                },
+                {
+                  "key": "sort_by",
+                  "value": "id"
+                },
+                {
+                  "key": "sort_dir",
+                  "value": "ASC"
                 }
               ]
             }
@@ -381,14 +397,14 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/public/products/arctic-thermal-parka-pro",
+              "raw": "{{base_url}}/public/products/raturu-winter-jacket",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "public",
                 "products",
-                "arctic-thermal-parka-pro"
+                "raturu-winter-jacket"
               ]
             }
           }
@@ -404,7 +420,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/public/categories?page=1&limit=10&search=Winter",
+              "raw": "{{base_url}}/public/categories?page=1&limit=10&search=Winter&sort_by=id&sort_dir=ASC",
               "host": [
                 "{{base_url}}"
               ],
@@ -428,6 +444,14 @@
                   "value": "Winter",
                   "description": "Search by category name",
                   "disabled": true
+                },
+                {
+                  "key": "sort_by",
+                  "value": "id"
+                },
+                {
+                  "key": "sort_dir",
+                  "value": "ASC"
                 }
               ]
             }
@@ -444,7 +468,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/public/pickup-locations?page=1&limit=10&search=Terminal",
+              "raw": "{{base_url}}/public/pickup-locations?page=1&limit=10&search=Terminal&sort_by=id&sort_dir=ASC",
               "host": [
                 "{{base_url}}"
               ],
@@ -468,6 +492,14 @@
                   "value": "Terminal",
                   "description": "Search by location name or city",
                   "disabled": true
+                },
+                {
+                  "key": "sort_by",
+                  "value": "id"
+                },
+                {
+                  "key": "sort_dir",
+                  "value": "ASC"
                 }
               ]
             }
@@ -484,7 +516,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/public/faqs?page=1&limit=10&search=payment",
+              "raw": "{{base_url}}/public/faqs?page=1&limit=10&search=payment&sort_by=id&sort_dir=ASC",
               "host": [
                 "{{base_url}}"
               ],
@@ -508,6 +540,14 @@
                   "value": "payment",
                   "description": "Search by question or answer",
                   "disabled": true
+                },
+                {
+                  "key": "sort_by",
+                  "value": "id"
+                },
+                {
+                  "key": "sort_dir",
+                  "value": "ASC"
                 }
               ]
             }
@@ -573,7 +613,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Sarah Wijaya\",\n    \"email\": \"sarah@example.com\",\n    \"subject\": \"Winter Gear Sizing Inquiry\",\n    \"message\": \"Could you advise on the size chart for Arctic Thermal Parka Pro?\"\n}"
+              "raw": "{\n    \"name\": \"Sarah Wijaya\",\n    \"email\": \"sarah@example.com\",\n    \"subject\": \"Winter Gear Sizing Inquiry\",\n    \"message\": \"Could you advise on the size chart for Raturu Winter Jacket?\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/public/contact",
@@ -637,7 +677,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/orders?page=1&limit=10&status=pending_payment",
+              "raw": "{{base_url}}/orders?page=1&limit=10&status=pending_payment&sort_by=created_at&sort_dir=DESC",
               "host": [
                 "{{base_url}}"
               ],
@@ -660,6 +700,14 @@
                   "value": "pending_payment",
                   "description": "Filter status: pending_payment | paid | active_rent",
                   "disabled": true
+                },
+                {
+                  "key": "sort_by",
+                  "value": "created_at"
+                },
+                {
+                  "key": "sort_dir",
+                  "value": "DESC"
                 }
               ]
             }
@@ -680,7 +728,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/orders/history?page=1&limit=20",
+              "raw": "{{base_url}}/orders/history?page=1&limit=20&sort_by=created_at&sort_dir=DESC",
               "host": [
                 "{{base_url}}"
               ],
@@ -698,6 +746,14 @@
                   "key": "limit",
                   "value": "20",
                   "description": "Items per page (1 - 100)"
+                },
+                {
+                  "key": "sort_by",
+                  "value": "created_at"
+                },
+                {
+                  "key": "sort_dir",
+                  "value": "DESC"
                 }
               ]
             }
@@ -838,7 +894,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"order_code\": \"JVP-20261117-1001\",\n    \"payment_status\": \"paid\"\n}"
+              "raw": "{\n    \"order_code\": \"JVP-20261118-1001\",\n    \"payment_status\": \"paid\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/webhooks/payment",
@@ -872,7 +928,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/hero-banners?page=1&limit=10&search=Winter&is_active=true",
+              "raw": "{{base_url}}/hero-banners?page=1&limit=10&search=Winter&is_active=true&sort_by=id&sort_dir=ASC",
               "host": [
                 "{{base_url}}"
               ],
@@ -897,6 +953,14 @@
                   "key": "is_active",
                   "value": "true",
                   "disabled": true
+                },
+                {
+                  "key": "sort_by",
+                  "value": "id"
+                },
+                {
+                  "key": "sort_dir",
+                  "value": "ASC"
                 }
               ]
             }
@@ -948,7 +1012,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"title\": \"Hokkaido Ski Season\",\n    \"subtitle\": \"Premium snow gear ready for pickup before departure.\",\n    \"image_url\": \"/images/hero/hokkaido.jpg\",\n    \"cta_text\": \"Rent Now\",\n    \"cta_link\": \"/products\",\n    \"sort_order\": 12,\n    \"is_active\": true\n}"
+              "raw": "{\n    \"title\": \"Raturu Winter Jacket\",\n    \"subtitle\": \"Rent insulated thermal puffer jackets built for cold-weather and snowy destinations without buying new.\",\n    \"image_url\": \"/uploads/jaket.jpg\",\n    \"cta_text\": \"Rent Jacket\",\n    \"cta_link\": \"/products?search=Raturu\",\n    \"sort_order\": 1,\n    \"is_active\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/hero-banners",
@@ -981,7 +1045,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"title\": \"Hokkaido Ski Season 2026\",\n    \"is_active\": true\n}"
+              "raw": "{\n    \"title\": \"Raturu Winter Jacket\",\n    \"is_active\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/hero-banners/1",
@@ -1024,6 +1088,300 @@
       ]
     },
     {
+      "name": "5b. Admin CRUD - Home Steps",
+      "item": [
+        {
+          "name": "List Home Steps",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/home-steps?page=1&limit=10&sort_by=sort_order&sort_dir=ASC",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "home-steps"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "sort_by",
+                  "value": "sort_order"
+                },
+                {
+                  "key": "sort_dir",
+                  "value": "ASC"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Home Step by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/home-steps/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "home-steps",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Home Step",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"step_label\": \"Step 05 - Extra Care\",\n  \"title\": \"24/7 Travel Support\",\n  \"description\": \"Contact our WhatsApp team anytime during your trip.\",\n  \"sort_order\": 5,\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/home-steps",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "home-steps"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Home Step",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"step_label\": \"Step 01 - Book Online\",\n  \"title\": \"Choose Your Gear\",\n  \"description\": \"Select winter jackets, Pocket WiFi modems, or cabin luggage and set your travel dates.\",\n  \"sort_order\": 1,\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/home-steps/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "home-steps",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Home Step",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/home-steps/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "home-steps",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5c. Admin CRUD - Home Stories",
+      "item": [
+        {
+          "name": "List Home Stories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/home-stories?page=1&limit=10&sort_by=sort_order&sort_dir=ASC",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "home-stories"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "sort_by",
+                  "value": "sort_order"
+                },
+                {
+                  "key": "sort_dir",
+                  "value": "ASC"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Home Story by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/home-stories/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "home-stories",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Home Story",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer_name\": \"Raka Pratama\",\n  \"gear_tag\": \"Unlimited 5G Pocket WiFi Modem\",\n  \"testimonial\": \"Traveling abroad with my family was effortless. Renting the JavaPack Pocket WiFi kept everyone connected.\",\n  \"image_url\": \"/images/stories/story-family-modem.jpg\",\n  \"sort_order\": 1,\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/home-stories",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "home-stories"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Home Story",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer_name\": \"Dina Safitri\",\n  \"gear_tag\": \"Raturu Winter Jacket\",\n  \"testimonial\": \"My solo winter trip stayed super cozy with JavaPack winter jacket.\",\n  \"image_url\": \"/images/stories/story-solo-paris.jpg\",\n  \"sort_order\": 2,\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/home-stories/2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "home-stories",
+                "2"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Home Story",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/home-stories/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "home-stories",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "6. Admin CRUD - Categories",
       "item": [
         {
@@ -1041,7 +1399,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/categories?page=1&limit=10&search=Winter&is_active=true",
+              "raw": "{{base_url}}/categories?page=1&limit=10&search=Winter&is_active=true&sort_by=id&sort_dir=ASC",
               "host": [
                 "{{base_url}}"
               ],
@@ -1066,6 +1424,14 @@
                   "key": "is_active",
                   "value": "true",
                   "disabled": true
+                },
+                {
+                  "key": "sort_by",
+                  "value": "id"
+                },
+                {
+                  "key": "sort_dir",
+                  "value": "ASC"
                 }
               ]
             }
@@ -1117,7 +1483,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Ski Goggles & Helmets\",\n    \"description\": \"Anti-fog ski goggles and certified snow helmets.\"\n}"
+              "raw": "{\n    \"name\": \"Apparel\",\n    \"description\": \"Insulated winter jackets and cold-weather outerwear available for rent.\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/categories",
@@ -1150,7 +1516,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Winter Outerwear & Coats\"\n}"
+              "raw": "{\n    \"name\": \"Bags & Luggage\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/categories/1",
@@ -1210,7 +1576,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/pickup-locations?page=1&limit=10&search=Jakarta&is_active=true",
+              "raw": "{{base_url}}/pickup-locations?page=1&limit=10&search=Jakarta&is_active=true&sort_by=id&sort_dir=ASC",
               "host": [
                 "{{base_url}}"
               ],
@@ -1235,6 +1601,14 @@
                   "key": "is_active",
                   "value": "true",
                   "disabled": true
+                },
+                {
+                  "key": "sort_by",
+                  "value": "id"
+                },
+                {
+                  "key": "sort_dir",
+                  "value": "ASC"
                 }
               ]
             }
@@ -1286,7 +1660,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Halim Perdanakusuma Hub\",\n    \"address\": \"Main Terminal Departure Gate 1, East Jakarta\",\n    \"city\": \"Jakarta\",\n    \"operational_hours\": \"05:00 - 21:00 WIB\",\n    \"is_active\": true\n}"
+              "raw": "{\n    \"name\": \"Malang Airport\",\n    \"address\": \"Arrival Terminal, Malang Airport\",\n    \"city\": \"Malang\",\n    \"operational_hours\": \"07:00 - 22:00 WIB\",\n    \"is_active\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/pickup-locations",
@@ -1319,7 +1693,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"operational_hours\": \"04:30 - 23:30 WIB\"\n}"
+              "raw": "{\n    \"operational_hours\": \"07:00 - 22:00 WIB\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/pickup-locations/1",
@@ -1379,7 +1753,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/products?page=1&limit=10&category_id=1&search=Japan",
+              "raw": "{{base_url}}/products?page=1&limit=10&category_id=1&search=Japan&sort_by=id&sort_dir=ASC",
               "host": [
                 "{{base_url}}"
               ],
@@ -1402,6 +1776,14 @@
                 {
                   "key": "search",
                   "value": "Japan"
+                },
+                {
+                  "key": "sort_by",
+                  "value": "id"
+                },
+                {
+                  "key": "sort_dir",
+                  "value": "ASC"
                 }
               ]
             }
@@ -1453,7 +1835,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"category_id\": 1,\n    \"pickup_location_id\": 1,\n    \"name\": \"Glacier Expedition Down Coat\",\n    \"description\": \"Ultra-warm 800-fill goose down expedition coat.\",\n    \"image_url\": \"/images/products/glacier-coat.jpg\",\n    \"price_per_day\": 95000,\n    \"stock\": 10,\n    \"is_active\": true\n}"
+              "raw": "{\n    \"category_id\": 5,\n    \"pickup_location_id\": 1,\n    \"name\": \"Raturu Winter Jacket\",\n    \"description\": \"Windproof thermal puffer jacket designed for snow and four-season travel.\",\n    \"image_url\": \"/uploads/jaket.jpg\",\n    \"price_per_day\": 45000,\n    \"stock\": 20,\n    \"is_active\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/products",
@@ -1486,7 +1868,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"price_per_day\": 90000,\n    \"stock\": 18\n}"
+              "raw": "{\n    \"price_per_day\": 45000,\n    \"stock\": 20\n}"
             },
             "url": {
               "raw": "{{base_url}}/products/1",
@@ -1546,7 +1928,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/faqs?page=1&limit=10&search=payment&is_active=true",
+              "raw": "{{base_url}}/faqs?page=1&limit=10&search=payment&is_active=true&sort_by=id&sort_dir=ASC",
               "host": [
                 "{{base_url}}"
               ],
@@ -1571,6 +1953,14 @@
                   "key": "is_active",
                   "value": "true",
                   "disabled": true
+                },
+                {
+                  "key": "sort_by",
+                  "value": "id"
+                },
+                {
+                  "key": "sort_dir",
+                  "value": "ASC"
                 }
               ]
             }
@@ -1622,7 +2012,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"question\": \"Do you provide luggage wrapping at airport pickup?\",\n  \"answer\": \"Yes, complimentary protective rain covers are included with every hardcase rental.\",\n  \"is_active\": true\n}"
+              "raw": "{\n  \"question\": \"What is JavaPack?\",\n  \"answer\": \"JavaPack is a travel gear rental platform offering winter jackets, Pocket WiFi modems, and cabin luggage with convenient airport pickup across Indonesia.\",\n  \"is_active\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/faqs",
@@ -1715,7 +2105,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/cms/dashboard?page=all&visitor_type=all&month=11&year=2026",
+              "raw": "{{base_url}}/cms/dashboard?page=all&visitor_type=all&month=11&year=2026&sort_by=id&sort_dir=ASC",
               "host": [
                 "{{base_url}}"
               ],
@@ -1747,6 +2137,14 @@
                   "value": "2026",
                   "description": "4-digit year",
                   "disabled": true
+                },
+                {
+                  "key": "sort_by",
+                  "value": "id"
+                },
+                {
+                  "key": "sort_dir",
+                  "value": "ASC"
                 }
               ]
             }
@@ -1772,7 +2170,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/cms/orders?page=1&limit=10&search=JVP&status=pending_payment&category_id=1&pickup_location_id=1&start_date=2026-11-01&end_date=2026-11-30",
+              "raw": "{{base_url}}/cms/orders?page=1&limit=10&search=JVP&status=pending_payment&category_id=1&pickup_location_id=1&start_date=2026-11-01&end_date=2026-11-30&sort_by=created_at&sort_dir=DESC",
               "host": [
                 "{{base_url}}"
               ],
@@ -1820,6 +2218,14 @@
                   "key": "end_date",
                   "value": "2026-11-30",
                   "disabled": true
+                },
+                {
+                  "key": "sort_by",
+                  "value": "created_at"
+                },
+                {
+                  "key": "sort_dir",
+                  "value": "DESC"
                 }
               ]
             }
@@ -1872,7 +2278,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"status\": \"active_rent\"\n}"
+              "raw": "{\n  \"status\": \"completed\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/cms/orders/1/status",
@@ -1935,7 +2341,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/cms/users?page=1&limit=10&search=admin&role=admin",
+              "raw": "{{base_url}}/cms/users?page=1&limit=10&search=admin&role=admin&sort_by=id&sort_dir=ASC",
               "host": [
                 "{{base_url}}"
               ],
@@ -1959,6 +2365,14 @@
                 {
                   "key": "role",
                   "value": "admin"
+                },
+                {
+                  "key": "sort_by",
+                  "value": "id"
+                },
+                {
+                  "key": "sort_dir",
+                  "value": "ASC"
                 }
               ]
             }
@@ -1984,7 +2398,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/cms/contacts?page=1&limit=10&search=Winter&status=unread&start_date=2026-11-01&end_date=2026-11-30",
+              "raw": "{{base_url}}/cms/contacts?page=1&limit=10&search=Winter&status=unread&start_date=2026-11-01&end_date=2026-11-30&sort_by=created_at&sort_dir=DESC",
               "host": [
                 "{{base_url}}"
               ],
@@ -2021,6 +2435,14 @@
                   "key": "end_date",
                   "value": "2026-11-30",
                   "disabled": true
+                },
+                {
+                  "key": "sort_by",
+                  "value": "created_at"
+                },
+                {
+                  "key": "sort_dir",
+                  "value": "DESC"
                 }
               ]
             }
@@ -2095,74 +2517,6 @@
       "name": "14. Admin CMS - Website Content & Media",
       "item": [
         {
-          "name": "Get Home Content (CMS)",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/cms/home-content",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "cms",
-                "home-content"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{access_token}}",
-                  "type": "string"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name": "Update Home Content (CMS)",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/cms/home-content",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "cms",
-                "home-content"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{access_token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"badge_text\": \"International Travel Gear Rental\",\n  \"headline\": \"Travel Lighter, Your Gear Ready at the Airport\",\n  \"subheadline\": \"Rent winter jackets, hardcase luggage, action cams & WiFi adapters without buying expensive gear — easy pickup at Terminal 3.\"\n}"
-            }
-          }
-        },
-        {
           "name": "Get About Us Content (CMS)",
           "request": {
             "method": "GET",
@@ -2226,7 +2580,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"eyebrow\": \"WHY CHOOSE JAVAPACK?\",\n  \"title\": \"Rent Premium Travel Gear, Save Up to 70% on Trip Costs\",\n  \"description\": \"JavaPack helps travelers heading to four-season destinations stay connected and prepared.\",\n  \"banner_image_url\": \"/images/travel-lounge.jpg\",\n  \"side_image_url\": \"/images/travel-winter.jpg\"\n}"
+              "raw": "{\n  \"eyebrow\": \"ABOUT JAVAPACK\",\n  \"title\": \"The Story Behind JavaPack and Our Travel Gear Rental Service\",\n  \"description\": \"The name JavaPack comes from two simple words: \\\"Java\\\", representing Jawa, and \\\"Pack\\\", meaning the essential belongings we pack for a journey.\",\n  \"banner_image_url\": \"/images/products/koper.jpg\",\n  \"side_image_url\": \"/images/products/jaket.jpg\"\n}"
             }
           }
         },
@@ -2294,7 +2648,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"location_title\": \"JavaPack Counter — Malang, East Java\",\n  \"location_subtitle\": \"Malang City, East Java, Indonesia\",\n  \"address\": \"Jl. Soekarno Hatta No. 18, Lowokwaru, Malang, East Java 65141\",\n  \"whatsapp\": \"+62 812-3456-7890\",\n  \"email\": \"hello@javapack.id\",\n  \"operating_hours\": \"Open Daily 08:00 - 22:00 WIB\",\n  \"latitude\": \"-7.9467\",\n  \"longitude\": \"112.6157\"\n}"
+              "raw": "{\n  \"location_title\": \"Malang\",\n  \"location_subtitle\": \"Suhat\",\n  \"address\": \"Jatimulyo, Lowokwaru, Kota Malang, Jawa Timur\",\n  \"whatsapp\": \"085216373763\",\n  \"email\": \"admin@gmail.com\",\n  \"operating_hours\": \"Open Daily 08:00 - 22:00 WIB\",\n  \"latitude\": \"-7.962497128667803\",\n  \"longitude\": \"112.65455289479156\"\n}"
             }
           }
         },

@@ -3,24 +3,35 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('home_contents', {
+    await queryInterface.dropTable('home_contents').catch(() => {});
+    await queryInterface.createTable('home_steps', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      badge_text: {
+      step_label: {
+        type: Sequelize.STRING(100),
+        allowNull: false
+      },
+      title: {
         type: Sequelize.STRING(150),
         allowNull: false
       },
-      headline: {
-        type: Sequelize.STRING(255),
-        allowNull: false
-      },
-      subheadline: {
+      description: {
         type: Sequelize.TEXT,
         allowNull: false
+      },
+      sort_order: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 1
+      },
+      is_active: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
       },
       created_at: {
         allowNull: false,
@@ -40,6 +51,6 @@ module.exports = {
   },
 
   async down(queryInterface) {
-    await queryInterface.dropTable('home_contents');
+    await queryInterface.dropTable('home_steps');
   }
 };

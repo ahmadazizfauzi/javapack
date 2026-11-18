@@ -5,7 +5,8 @@ import {
   ContactFormPayload,
   ContactInfo,
   HeroBannerItem,
-  HomeContent,
+  HomeStepItem,
+  HomeStoryItem,
   OrderCheckoutPayload,
   OrderCheckoutResponse,
   PublicCategory,
@@ -94,32 +95,124 @@ export const MOCK_CONTACT_INFO: ContactInfo = {
   longitude: "112.6157",
 };
 
-export const DEFAULT_HOME_CONTENT: HomeContent = {
-  badgeText: "",
-  headline: "",
-  subheadline: "",
-};
+export const DEFAULT_HOME_STEPS: HomeStepItem[] = [
+  {
+    id: "step-1",
+    stepLabel: "Step 01 - Book Online",
+    title: "Choose Your Gear",
+    description:
+      "Select winter jackets, Pocket WiFi modems, or cabin luggage and set your travel dates.",
+    sortOrder: 1,
+  },
+  {
+    id: "step-2",
+    stepLabel: "Step 02 - Instant Checkout",
+    title: "Instant Payment",
+    description:
+      "Pay securely via Midtrans and receive instant order confirmation on WhatsApp.",
+    sortOrder: 2,
+  },
+  {
+    id: "step-3",
+    stepLabel: "Step 03 - Departure",
+    title: "Airport Pickup",
+    description:
+      "Show your order code at our airport counter and pick up your sanitized gear.",
+    sortOrder: 3,
+  },
+  {
+    id: "step-4",
+    stepLabel: "Step 04 - Arrival",
+    title: "Easy Return",
+    description:
+      "Drop off your gear at the airport counter when you land back home.",
+    sortOrder: 4,
+  },
+];
 
-interface RawHomeContent {
-  badge_text?: string;
-  headline?: string;
-  subheadline?: string;
+export const DEFAULT_HOME_STORIES: HomeStoryItem[] = [
+  {
+    id: "story-1",
+    customerName: "Raka Pratama",
+    gearTag: "Unlimited 5G Pocket WiFi Modem",
+    testimonial:
+      "Traveling abroad with my family was effortless. Renting the JavaPack Pocket WiFi kept everyone connected with a stable signal and easy airport pickup.",
+    imageUrl: "/images/stories/story-family-modem.jpg",
+    sortOrder: 1,
+  },
+  {
+    id: "story-2",
+    customerName: "Dina Safitri",
+    gearTag: "Raturu Winter Jacket",
+    testimonial:
+      "My solo winter trip stayed super cozy. The JavaPack winter jacket was warm, lightweight to carry, and quick to pick up right before boarding.",
+    imageUrl: "/images/stories/story-solo-paris.jpg",
+    sortOrder: 2,
+  },
+  {
+    id: "story-3",
+    customerName: "Bima & Nadia",
+    gearTag: "20-Inch Hardcase Cabin Luggage",
+    testimonial:
+      "Exploring the city was so much smoother with JavaPack cabin luggage. Smooth wheels, spacious interior, and hassle-free drop-off at the airport counter.",
+    imageUrl: "/images/stories/story-couple-china.jpg",
+    sortOrder: 3,
+  },
+];
+
+interface RawHomeStep {
+  id: number;
+  step_label: string;
+  title: string;
+  description: string;
+  sort_order: number;
+}
+
+interface RawHomeStory {
+  id: number;
+  customer_name: string;
+  gear_tag: string;
+  testimonial: string;
+  image_url: string;
+  sort_order: number;
 }
 
 export async function fetchPublicHomeData(): Promise<{
-  homeContent: HomeContent;
+  homeSteps: HomeStepItem[];
+  homeStories: HomeStoryItem[];
   banners: HeroBannerItem[];
 }> {
   const response = await axiosInstance.get<
-    ApiEnvelope<{ home_content?: RawHomeContent | null; hero_banners: RawBanner[] }>
+    ApiEnvelope<{
+      home_steps?: RawHomeStep[];
+      home_stories?: RawHomeStory[];
+      hero_banners: RawBanner[];
+    }>
   >("/public/home");
-  const rawHome = response.data.data.home_content;
+  const rawSteps = response.data.data.home_steps || [];
+  const rawStories = response.data.data.home_stories || [];
   return {
-    homeContent: {
-      badgeText: rawHome?.badge_text || "",
-      headline: rawHome?.headline || "",
-      subheadline: rawHome?.subheadline || "",
-    },
+    homeSteps:
+      rawSteps.length > 0
+        ? rawSteps.map((s) => ({
+            id: String(s.id),
+            stepLabel: s.step_label,
+            title: s.title,
+            description: s.description,
+            sortOrder: Number(s.sort_order) || 1,
+          }))
+        : DEFAULT_HOME_STEPS,
+    homeStories:
+      rawStories.length > 0
+        ? rawStories.map((st) => ({
+            id: String(st.id),
+            customerName: st.customer_name,
+            gearTag: st.gear_tag,
+            testimonial: st.testimonial,
+            imageUrl: st.image_url || "/images/stories/story-family-modem.jpg",
+            sortOrder: Number(st.sort_order) || 1,
+          }))
+        : DEFAULT_HOME_STORIES,
     banners: response.data.data.hero_banners.map((b) => ({
       id: String(b.id),
       title: b.title,

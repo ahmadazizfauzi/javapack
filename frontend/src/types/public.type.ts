@@ -6,10 +6,21 @@ export interface HeroBannerItem {
   ctaHref: string;
 }
 
-export interface HomeContent {
-  badgeText: string;
-  headline: string;
-  subheadline: string;
+export interface HomeStepItem {
+  id: string;
+  stepLabel: string;
+  title: string;
+  description: string;
+  sortOrder: number;
+}
+
+export interface HomeStoryItem {
+  id: string;
+  customerName: string;
+  gearTag: string;
+  testimonial: string;
+  imageUrl: string;
+  sortOrder: number;
 }
 
 export interface PublicCategory {

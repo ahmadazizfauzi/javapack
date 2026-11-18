@@ -28,6 +28,7 @@ const orderFilterOptions = [
   { label: "Pending Payment", value: "pending_payment" },
   { label: "Paid", value: "paid" },
   { label: "Active Rent", value: "active_rent" },
+  { label: "Completed (Returned)", value: "completed" },
 ];
 
 const statusUpdateOptions = orderFilterOptions.slice(1);
@@ -44,6 +45,9 @@ function getOrderBadge(status: BackendOrderStatus): {
   if (status === "pending_payment") {
     return { label: "Pending Payment", variant: "warning" };
   }
+  if (status === "completed") {
+    return { label: "Completed", variant: "neutral" };
+  }
   return { label: "Paid (Rented)", variant: "info" };
 }
 
@@ -55,6 +59,7 @@ export function CmsOrdersPage() {
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [sortDir, setSortDir] = useState<"DESC" | "ASC">("DESC");
   const [selectedDate, setSelectedDate] = useState<Date>(
     () => new Date(2026, 10, 17)
   );
@@ -79,6 +84,8 @@ export function CmsOrdersPage() {
       const res = await fetchCmsOrders({
         search,
         status: statusFilter === "all" ? undefined : statusFilter,
+        sort_by: "created_at",
+        sort_dir: sortDir,
         page,
         limit: 10,
       });
@@ -95,7 +102,7 @@ export function CmsOrdersPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [search, statusFilter, page]);
+  }, [search, statusFilter, sortDir, page]);
 
   useEffect(() => {
     loadData();
@@ -167,6 +174,15 @@ export function CmsOrdersPage() {
       header: "BOOKING CODE",
       render: (row) => (
         <span className="font-semibold text-cyan-400">{row.bookingCode}</span>
+      ),
+    },
+    {
+      key: "createdAt",
+      header: "CREATED AT",
+      render: (row) => (
+        <span className={`${baseTypography.xs} text-surface-subtle`}>
+          {row.createdAt}
+        </span>
       ),
     },
     {
@@ -263,6 +279,11 @@ export function CmsOrdersPage() {
           filterValue={statusFilter}
           onFilterChange={(val) => {
             setStatusFilter(val);
+            setPage(1);
+          }}
+          sortValue={sortDir}
+          onSortChange={(val) => {
+            setSortDir(val);
             setPage(1);
           }}
           selectedDate={selectedDate}

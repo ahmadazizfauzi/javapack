@@ -38,6 +38,7 @@ export function CmsCategoriesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [sortDir, setSortDir] = useState<"DESC" | "ASC">("ASC");
   const [selectedDate, setSelectedDate] = useState<Date>(
     () => new Date(2026, 10, 17)
   );
@@ -62,7 +63,13 @@ export function CmsCategoriesPage() {
   const loadData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await fetchCmsCategories({ search, page, limit: 10 });
+      const res = await fetchCmsCategories({
+        search,
+        sort_by: "id",
+        sort_dir: sortDir,
+        page,
+        limit: 10,
+      });
       setItems(res.items);
       setTotalItems(res.pagination.total);
       setTotalPages(Math.max(1, res.pagination.totalPages));
@@ -76,7 +83,7 @@ export function CmsCategoriesPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [search, page]);
+  }, [search, sortDir, page]);
 
   useEffect(() => {
     loadData();
@@ -245,6 +252,11 @@ export function CmsCategoriesPage() {
           filterOptions={statusFilterOptions}
           filterValue={statusFilter}
           onFilterChange={setStatusFilter}
+          sortValue={sortDir}
+          onSortChange={(val) => {
+            setSortDir(val);
+            setPage(1);
+          }}
           selectedDate={selectedDate}
           onDateChange={setSelectedDate}
         />

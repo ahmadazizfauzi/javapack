@@ -41,26 +41,26 @@ export function OrderModal({
   onCheckoutSuccess,
 }: OrderModalProps) {
   const router = useRouter();
-  const [startDate, setStartDate] = useState<Date>(() => new Date(2026, 10, 19));
-  const [endDate, setEndDate] = useState<Date>(() => new Date(2026, 10, 24));
-  const [quantity, setQuantity] = useState(1);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [quantityInput, setQuantityInput] = useState("");
   const [pickupLocationId, setPickupLocationId] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
     if (product) {
-      setQuantity(1);
-      setPickupLocationId(
-        product.pickupLocationId || pickupLocations[0]?.id || "1"
-      );
+      setStartDate(null);
+      setEndDate(null);
+      setQuantityInput("");
+      setPickupLocationId("");
       setErrorMsg(null);
     }
-  }, [product, pickupLocations]);
+  }, [product]);
 
   const pickupOptions = useMemo(() => {
     if (pickupLocations.length === 0) {
-      return [{ label: "Terminal 3 Soekarno-Hatta Counter", value: "1" }];
+      return [{ label: "Malang Airport (Malang)", value: "1" }];
     }
     return pickupLocations.map((loc) => ({
       label: `${loc.name} (${loc.city})`,
@@ -69,23 +69,29 @@ export function OrderModal({
   }, [pickupLocations]);
 
   const durationDays = useMemo(() => {
+    if (!startDate || !endDate) return 0;
     const diffMs = endDate.getTime() - startDate.getTime();
     const days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-    return days > 0 ? days : 1;
+    return days > 0 ? days : 0;
   }, [startDate, endDate]);
 
   if (!product) return null;
 
-  const totalAmount = product.pricePerDay * durationDays * quantity;
+  const parsedQuantity = Number.parseInt(quantityInput, 10);
+  const validQuantity =
+    !Number.isNaN(parsedQuantity) && parsedQuantity >= 1 ? parsedQuantity : 0;
+  const totalAmount = product.pricePerDay * durationDays * validQuantity;
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const parsed = Number.parseInt(e.target.value, 10);
-    if (Number.isNaN(parsed)) {
-      setQuantity(1);
+    const raw = e.target.value;
+    if (raw === "") {
+      setQuantityInput("");
       return;
     }
+    const parsed = Number.parseInt(raw, 10);
+    if (Number.isNaN(parsed)) return;
     const clamped = Math.max(1, Math.min(product.stock, parsed));
-    setQuantity(clamped);
+    setQuantityInput(String(clamped));
   };
 
   const handleCheckout = async () => {
@@ -99,13 +105,30 @@ export function OrderModal({
       return;
     }
 
+    if (!startDate || !endDate) {
+      setErrorMsg("Please select both rental start date and return date.");
+      return;
+    }
+    if (durationDays <= 0) {
+      setErrorMsg("Return date must be after rental start date.");
+      return;
+    }
+    if (validQuantity < 1) {
+      setErrorMsg("Please enter a valid rental quantity.");
+      return;
+    }
+    if (!pickupLocationId) {
+      setErrorMsg("Please select a pickup location.");
+      return;
+    }
+
     setIsSubmitting(true);
     setErrorMsg(null);
     try {
       const result = await createOrderCheckout({
         product_id: Number(product.id),
-        pickup_location_id: Number(pickupLocationId || product.pickupLocationId),
-        quantity,
+        pickup_location_id: Number(pickupLocationId),
+        quantity: validQuantity,
         start_date: formatApiDate(startDate),
         end_date: formatApiDate(endDate),
       });
@@ -166,6 +189,7 @@ export function OrderModal({
                 value={startDate}
                 onChange={setStartDate}
                 displayMode="full-date"
+                placeholder="Select start date"
                 className="w-full"
               />
             </div>
@@ -177,6 +201,7 @@ export function OrderModal({
                 value={endDate}
                 onChange={setEndDate}
                 displayMode="full-date"
+                placeholder="Select return date"
                 className="w-full"
               />
             </div>
@@ -188,13 +213,15 @@ export function OrderModal({
               type="number"
               min={1}
               max={product.stock}
-              value={quantity}
+              placeholder="Enter quantity"
+              value={quantityInput}
               onChange={handleQuantityChange}
             />
             <BaseDropdown
               label="Pickup Location"
               options={pickupOptions}
               value={pickupLocationId}
+              placeholder="Select pickup location"
               onChange={setPickupLocationId}
             />
           </div>
@@ -219,7 +246,7 @@ export function OrderModal({
             <div className={`flex items-center justify-between ${baseTypography.xs} text-surface-subtle`}>
               <span>Quantity</span>
               <span>
-                {quantity} {quantity === 1 ? "Unit" : "Units"}
+                {validQuantity} {validQuantity === 1 ? "Unit" : "Units"}
               </span>
             </div>
             <div className="my-1 h-px w-full bg-surface-elevated" />

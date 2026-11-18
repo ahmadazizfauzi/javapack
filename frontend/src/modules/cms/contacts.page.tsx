@@ -48,6 +48,7 @@ export function CmsContactsPage() {
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [sortDir, setSortDir] = useState<"DESC" | "ASC">("DESC");
   const [selectedDate, setSelectedDate] = useState<Date>(
     () => new Date(2026, 10, 17)
   );
@@ -74,6 +75,8 @@ export function CmsContactsPage() {
       const res = await fetchCmsContacts({
         search,
         status: statusFilter === "all" ? undefined : statusFilter,
+        sort_by: "created_at",
+        sort_dir: sortDir,
         page,
         limit: 10,
       });
@@ -90,7 +93,7 @@ export function CmsContactsPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [search, statusFilter, page]);
+  }, [search, statusFilter, sortDir, page]);
 
   useEffect(() => {
     loadData();
@@ -248,6 +251,11 @@ export function CmsContactsPage() {
           filterValue={statusFilter}
           onFilterChange={(val) => {
             setStatusFilter(val);
+            setPage(1);
+          }}
+          sortValue={sortDir}
+          onSortChange={(val) => {
+            setSortDir(val);
             setPage(1);
           }}
           selectedDate={selectedDate}

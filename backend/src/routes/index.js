@@ -9,6 +9,8 @@ const webhookRoutes = require('./webhookRoutes');
 const cmsRoutes = require('./cmsRoutes');
 const {
   heroBannerRouter,
+  homeStepRouter,
+  homeStoryRouter,
   categoryRouter,
   pickupLocationRouter,
   productRouter,
@@ -24,6 +26,8 @@ router.use('/cms', cmsRoutes);
 
 // Master CRUD routes supporting Public Page menus
 router.use('/hero-banners', heroBannerRouter);
+router.use('/home-steps', homeStepRouter);
+router.use('/home-stories', homeStoryRouter);
 router.use('/categories', categoryRouter);
 router.use('/pickup-locations', pickupLocationRouter);
 router.use('/products', productRouter);

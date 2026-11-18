@@ -8,6 +8,11 @@ import {
 } from "@/components/ui/base_dropdown";
 import { BaseDatePicker } from "@/components/ui/base_date_picker";
 
+const sortOptions: BaseDropdownOption[] = [
+  { label: "Newest", value: "DESC" },
+  { label: "Oldest", value: "ASC" },
+];
+
 export interface CmsTableToolbarProps {
   searchValue: string;
   onSearchChange: (value: string) => void;
@@ -15,6 +20,8 @@ export interface CmsTableToolbarProps {
   filterOptions: BaseDropdownOption[];
   filterValue: string;
   onFilterChange: (value: string) => void;
+  sortValue?: "DESC" | "ASC";
+  onSortChange?: (value: "DESC" | "ASC") => void;
   selectedDate: Date;
   onDateChange: (date: Date) => void;
 }
@@ -26,6 +33,8 @@ export function CmsTableToolbar({
   filterOptions,
   filterValue,
   onFilterChange,
+  sortValue = "DESC",
+  onSortChange,
   selectedDate,
   onDateChange,
 }: CmsTableToolbarProps) {
@@ -64,6 +73,13 @@ export function CmsTableToolbar({
           value={filterValue}
           onChange={onFilterChange}
         />
+        {onSortChange && (
+          <BaseDropdown
+            options={sortOptions}
+            value={sortValue}
+            onChange={(val) => onSortChange(val as "DESC" | "ASC")}
+          />
+        )}
         <BaseDatePicker
           value={selectedDate}
           onChange={onDateChange}

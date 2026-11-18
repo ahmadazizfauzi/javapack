@@ -3,19 +3,15 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { HeroBannerItem, HomeContent } from "@/types/public.type";
+import { ArrowUpRight } from "lucide-react";
+import { HeroBannerItem } from "@/types/public.type";
 import { baseTypography } from "@/tokens/base_typography";
 
 export interface HeroSliderSectionProps {
   banners: HeroBannerItem[];
-  homeContent?: HomeContent;
 }
 
-export function HeroSliderSection({
-  banners,
-  homeContent,
-}: HeroSliderSectionProps) {
+export function HeroSliderSection({ banners }: HeroSliderSectionProps) {
   const [activeIndex, setActiveIndex] = useState(
     banners.length > 1 ? 1 : 0
   );
@@ -53,29 +49,21 @@ export function HeroSliderSection({
     direction === "next" ? "animate-slide-right" : "animate-slide-left";
 
   return (
-    <section className="mx-auto flex w-full max-w-7xl flex-col items-center px-4 pb-16 pt-6 sm:px-6 lg:px-8">
-      {/* Hero Header Block */}
-      {(homeContent?.badgeText ||
-        homeContent?.headline ||
-        homeContent?.subheadline) && (
-        <div className="flex max-w-3xl flex-col items-center text-center">
-          {homeContent?.badgeText && (
-            <span className={`inline-flex items-center rounded-full border border-surface-border bg-surface-card/80 px-4 py-1 ${baseTypography.xs} font-medium text-surface-subtle`}>
-              {homeContent.badgeText}
-            </span>
-          )}
-          {homeContent?.headline && (
-            <h1 className={`mt-5 ${baseTypography["3xl"]} font-bold tracking-tight text-surface-foreground sm:text-4xl lg:text-5xl`}>
-              {homeContent.headline}
-            </h1>
-          )}
-          {homeContent?.subheadline && (
-            <p className={`mt-4 max-w-2xl ${baseTypography.sm} text-surface-subtle sm:text-base`}>
-              {homeContent.subheadline}
-            </p>
-          )}
-        </div>
-      )}
+    <section
+      id="highlighted-gear"
+      className="mx-auto flex w-full max-w-7xl scroll-mt-24 flex-col items-center px-4 pb-12 pt-10 sm:px-6 lg:px-8"
+    >
+      {/* Highlighted Gear Header Block */}
+      <div className="flex max-w-3xl flex-col items-center text-center">
+        <h2
+          className={`${baseTypography["2xl"]} font-bold tracking-tight text-surface-foreground sm:text-4xl`}
+        >
+          Explore Our Highlighted Gear
+        </h2>
+        <p className={`mt-3 max-w-2xl ${baseTypography.sm} text-surface-subtle sm:text-base`}>
+          Hand-picked winter parkas, global Pocket WiFi, and carry-on essentials ready for your next departure.
+        </p>
+      </div>
 
       {/* Hero Slider Row */}
       {total > 0 && currentBanner && (
@@ -165,49 +153,6 @@ export function HeroSliderSection({
             </div>
           </button>
         )}
-      </div>
-
-      {/* Slider Controls Row */}
-      <div className="mt-7 flex items-center justify-center gap-3">
-        <button
-          type="button"
-          onClick={handlePrev}
-          aria-label="Previous slide"
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-surface-elevated bg-surface-card text-surface-subtle transition-colors hover:border-surface-border hover:text-surface-foreground"
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </button>
-
-        <div className="flex items-center gap-2 px-1">
-          {banners.map((banner, idx) => {
-            const isActive = idx === activeIndex;
-            return (
-              <button
-                key={banner.id}
-                type="button"
-                onClick={() => {
-                  setDirection(idx > activeIndex ? "next" : "prev");
-                  setActiveIndex(idx);
-                }}
-                aria-label={`Select slide ${idx + 1}`}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  isActive
-                    ? "w-6 bg-indigo-500"
-                    : "w-2 bg-surface-border hover:bg-surface-muted"
-                }`}
-              />
-            );
-          })}
-        </div>
-
-        <button
-          type="button"
-          onClick={handleNext}
-          aria-label="Next slide"
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-surface-elevated bg-surface-card text-surface-subtle transition-colors hover:border-surface-border hover:text-surface-foreground"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </button>
       </div>
         </>
       )}

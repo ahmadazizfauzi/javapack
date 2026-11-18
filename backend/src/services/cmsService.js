@@ -9,7 +9,6 @@ const {
   ContactMessage,
   RentalHistoryLog,
   AboutContent,
-  HomeContent,
   ContactInfo
 } = require('../models');
 const PaginationHelper = require('../helpers/paginationHelper');
@@ -58,7 +57,11 @@ class CmsService {
         },
         { model: PickupLocation, as: 'pickupLocation', attributes: ['id', 'name', 'city', 'address'] }
       ],
-      order: [['id', 'ASC']],
+      order: PaginationHelper.buildSortOrder(
+        query,
+        ['id', 'created_at', 'total_amount', 'start_date', 'status'],
+        [['created_at', 'DESC'], ['id', 'DESC']]
+      ),
       limit,
       offset,
       subQuery: false
@@ -90,22 +93,54 @@ class CmsService {
   }
 
   static async updateOrderStatus(orderId, status) {
-    const allowedStatuses = ['pending_payment', 'paid', 'active_rent'];
+    const allowedStatuses = ['pending_payment', 'paid', 'active_rent', 'completed'];
     if (!allowedStatuses.includes(status)) {
       const error = new Error(`Invalid status. Allowed values: ${allowedStatuses.join(', ')}`);
       error.statusCode = 400;
       throw error;
     }
 
-    const order = await this.getOrderById(orderId);
-    await order.update({ status });
-    await require('./orderService').recordRentalLog({
-      order,
-      productName: order.product ? order.product.name : 'Travel Gear',
-      eventStatus: status,
-      note: `Status updated to ${status} by admin`
+    const updatedOrder = await sequelize.transaction(async (t) => {
+      const order = await Order.findByPk(orderId, {
+        include: [{ model: Product, as: 'product' }],
+        lock: t.LOCK.UPDATE,
+        transaction: t
+      });
+      if (!order) {
+        const error = new Error('Order not found');
+        error.statusCode = 404;
+        throw error;
+      }
+
+      const previousStatus = order.status;
+      if (previousStatus !== status && (previousStatus === 'completed' || status === 'completed')) {
+        const product = await Product.findByPk(order.product_id, {
+          lock: t.LOCK.UPDATE,
+          transaction: t
+        });
+        if (product) {
+          const nextStock =
+            status === 'completed'
+              ? product.stock + order.quantity
+              : Math.max(0, product.stock - order.quantity);
+          await product.update({ stock: nextStock }, { transaction: t });
+        }
+      }
+
+      await order.update({ status }, { transaction: t });
+      return order;
     });
-    return order;
+
+    await require('./orderService').recordRentalLog({
+      order: updatedOrder,
+      productName: updatedOrder.product ? updatedOrder.product.name : 'Travel Gear',
+      eventStatus: status,
+      note:
+        status === 'completed'
+          ? 'Gear returned and stock restored by admin'
+          : `Status updated to ${status} by admin`
+    });
+    return updatedOrder;
   }
 
   static async deleteOrder(orderId) {
@@ -151,7 +186,11 @@ class CmsService {
 
     const { rows, count } = await User.findAndCountAll({
       where,
-      order: [['id', 'ASC']],
+      order: PaginationHelper.buildSortOrder(
+        query,
+        ['id', 'created_at', 'name', 'email'],
+        [['id', 'ASC']]
+      ),
       limit,
       offset
     });
@@ -182,7 +221,11 @@ class CmsService {
 
     const { rows, count } = await ContactMessage.findAndCountAll({
       where,
-      order: [['id', 'ASC']],
+      order: PaginationHelper.buildSortOrder(
+        query,
+        ['id', 'created_at', 'status'],
+        [['created_at', 'DESC'], ['id', 'DESC']]
+      ),
       limit,
       offset
     });
@@ -256,35 +299,6 @@ class CmsService {
         payload.side_image_url !== undefined ? payload.side_image_url : about.side_image_url
     });
     return about;
-  }
-
-  static async getHomeContent() {
-    const home = await HomeContent.findOne({ order: [['id', 'ASC']] });
-    return (
-      home || {
-        id: null,
-        badge_text: '',
-        headline: '',
-        subheadline: ''
-      }
-    );
-  }
-
-  static async updateHomeContent(payload = {}) {
-    const home = await HomeContent.findOne({ order: [['id', 'ASC']] });
-    if (!home) {
-      return HomeContent.create({
-        badge_text: payload.badge_text || '',
-        headline: payload.headline || '',
-        subheadline: payload.subheadline || ''
-      });
-    }
-    await home.update({
-      badge_text: payload.badge_text !== undefined ? payload.badge_text : home.badge_text,
-      headline: payload.headline !== undefined ? payload.headline : home.headline,
-      subheadline: payload.subheadline !== undefined ? payload.subheadline : home.subheadline
-    });
-    return home;
   }
 
   static async getContactInfo() {
