@@ -19,6 +19,15 @@ module.exports = {
         updated_at: now
       },
       {
+        name: 'Petugas Konter Bandara',
+        email: 'petugas@gmail.com',
+        password: hashedPassword,
+        phone: '081234567890',
+        role: 'admin',
+        created_at: now,
+        updated_at: now
+      },
+      {
         name: 'Ahmad Aziz Fauzi',
         email: 'ahmad@gmail.com',
         password: hashedPassword,
@@ -31,6 +40,6 @@ module.exports = {
   },
 
   async down(queryInterface) {
-    await queryInterface.bulkDelete('users', { email: ['admin@gmail.com', 'ahmad@gmail.com'] }, {});
+    await queryInterface.bulkDelete('users', { email: ['admin@gmail.com', 'petugas@gmail.com', 'ahmad@gmail.com'] }, {});
   }
 };

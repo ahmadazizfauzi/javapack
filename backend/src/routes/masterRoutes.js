@@ -62,7 +62,7 @@ const productRouter = buildCrudRouter(
       { model: Category, as: 'category', attributes: ['id', 'name', 'slug'] },
       { model: PickupLocation, as: 'pickupLocation', attributes: ['id', 'name', 'city'] }
     ],
-    requiredFields: ['category_id', 'pickup_location_id', 'name', 'price_per_day']
+    requiredFields: ['category_id', 'name', 'price_per_day']
   })
 );
 

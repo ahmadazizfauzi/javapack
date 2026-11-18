@@ -30,6 +30,7 @@ export interface CmsProductItem {
   pricePerDay: number;
   durationLabel: string;
   stock: number;
+  isPhysical: boolean;
   imageUrl: string;
   isActive: boolean;
   status: "Active" | "Inactive";

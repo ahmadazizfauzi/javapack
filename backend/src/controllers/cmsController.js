@@ -22,6 +22,15 @@ class CmsController {
     }
   }
 
+  static async verifyOrderPickupToken(req, res, next) {
+    try {
+      const data = await CmsService.getOrderByPickupToken(req.query.token);
+      return ApiResponse.success(res, 'Order verified successfully', data);
+    } catch (error) {
+      return next(error);
+    }
+  }
+
   static async updateOrderStatus(req, res, next) {
     try {
       const { status } = req.body;

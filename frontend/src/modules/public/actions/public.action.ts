@@ -54,9 +54,10 @@ interface RawProduct {
   name: string;
   slug: string;
   category_id: number;
-  pickup_location_id: number;
+  pickup_location_id?: number | null;
   price_per_day: number | string;
   stock: number;
+  is_physical?: boolean;
   image_url?: string | null;
   category?: { id: number; name: string; slug: string };
   pickupLocation?: { id: number; name: string; city: string };
@@ -305,10 +306,11 @@ export async function fetchPublicProducts(params?: {
       slug: p.slug,
       categoryId: String(p.category_id),
       categoryName: p.category?.name || "Travel Gear",
-      pickupLocationId: String(p.pickup_location_id),
-      pickupLocationName: p.pickupLocation?.name || "Main Counter",
+      pickupLocationId: p.pickup_location_id ? String(p.pickup_location_id) : "",
+      pickupLocationName: p.pickupLocation?.name || (p.is_physical === false ? "Digital Delivery" : "Main Counter"),
       pricePerDay: Number(p.price_per_day),
       stock: Number(p.stock),
+      isPhysical: p.is_physical !== false,
       imageUrl: p.image_url || "/images/travel-luggage.jpg",
     })),
   };

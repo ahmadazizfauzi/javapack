@@ -22,7 +22,7 @@ module.exports = {
       },
       pickup_location_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: 'pickup_locations',
           key: 'id'
@@ -55,6 +55,11 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0
+      },
+      is_physical: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
       },
       is_active: {
         type: Sequelize.BOOLEAN,

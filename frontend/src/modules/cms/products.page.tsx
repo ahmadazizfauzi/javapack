@@ -63,6 +63,7 @@ export function CmsProductsPage() {
   const [stockInput, setStockInput] = useState("");
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [isPhysicalInput, setIsPhysicalInput] = useState(true);
   const [isActiveInput, setIsActiveInput] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -177,6 +178,7 @@ export function CmsProductsPage() {
     setPriceInput(String(row.pricePerDay));
     setStockInput(String(row.stock));
     setImageUrlInput(row.imageUrl);
+    setIsPhysicalInput(row.isPhysical);
     setIsActiveInput(row.isActive);
     setFormOpen(true);
   };
@@ -188,9 +190,12 @@ export function CmsProductsPage() {
       const payload = {
         name: nameInput.trim(),
         category_id: Number(catIdInput || categories[0]?.id || 1),
-        pickup_location_id: Number(locIdInput || locations[0]?.id || 1),
+        pickup_location_id: isPhysicalInput
+          ? Number(locIdInput || locations[0]?.id || 1)
+          : null,
         price_per_day: Number(priceInput.replace(/\D/g, "")) || 0,
         stock: Number(stockInput) || 0,
+        is_physical: isPhysicalInput,
         image_url: imageUrlInput.trim() || "/images/travel-luggage.jpg",
         is_active: isActiveInput,
       };
@@ -460,12 +465,14 @@ export function CmsProductsPage() {
               value={catIdInput}
               onChange={setCatIdInput}
             />
-            <BaseDropdown
-              label="Pickup Location"
-              options={locationSelectOptions}
-              value={locIdInput}
-              onChange={setLocIdInput}
-            />
+            {isPhysicalInput && (
+              <BaseDropdown
+                label="Pickup Location"
+                options={locationSelectOptions}
+                value={locIdInput}
+                onChange={setLocIdInput}
+              />
+            )}
           </div>
           <div className="grid grid-cols-2 gap-3">
             <BaseInput
@@ -489,6 +496,15 @@ export function CmsProductsPage() {
             isUploading={uploadingImage}
             onFileSelect={handleProductImagePick}
             changeText="Change Product Image"
+          />
+          <BaseSwitch
+            checked={isPhysicalInput}
+            onChange={setIsPhysicalInput}
+            label={
+              isPhysicalInput
+                ? "Type: Physical Gear (Airport Pickup)"
+                : "Type: Digital / Online (eSIM)"
+            }
           />
           <BaseSwitch
             checked={isActiveInput}

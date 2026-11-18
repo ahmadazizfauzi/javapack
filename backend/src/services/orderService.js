@@ -1,5 +1,10 @@
+const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
+const QRCode = require('qrcode');
 const { sequelize, Order, Product, PickupLocation, User, RentalHistoryLog } = require('../models');
 const PaginationHelper = require('../helpers/paginationHelper');
+const UrlHelper = require('../helpers/urlHelper');
 const PaymentService = require('./paymentService');
 const N8nService = require('./n8nService');
 
@@ -182,21 +187,26 @@ class OrderService {
         throw error;
       }
 
-      const targetLocationId = pickup_location_id || product.pickup_location_id;
-      const location = await PickupLocation.findOne({
-        where: { id: targetLocationId, is_active: true },
-        transaction: t
-      });
+      let resolvedLocationId = null;
+      if (product.is_physical !== false) {
+        const targetLocationId = pickup_location_id || product.pickup_location_id;
+        const location = await PickupLocation.findOne({
+          where: { id: targetLocationId, is_active: true },
+          transaction: t
+        });
 
-      if (!location) {
-        const error = new Error('Pickup location not found or inactive');
-        error.statusCode = 404;
-        throw error;
+        if (!location) {
+          const error = new Error('Pickup location not found or inactive');
+          error.statusCode = 404;
+          throw error;
+        }
+        resolvedLocationId = location.id;
       }
 
       const pricePerDay = Number(product.price_per_day);
       const totalAmount = pricePerDay * durationDays * parsedQty;
       const orderCode = this.generateOrderCode();
+      const pickupToken = crypto.randomBytes(16).toString('hex');
 
       await product.update({ stock: product.stock - parsedQty }, { transaction: t });
 
@@ -218,7 +228,7 @@ class OrderService {
           order_code: orderCode,
           user_id: userId,
           product_id: product.id,
-          pickup_location_id: location.id,
+          pickup_location_id: resolvedLocationId,
           quantity: parsedQty,
           start_date,
           end_date,
@@ -227,7 +237,8 @@ class OrderService {
           total_amount: totalAmount,
           status: 'pending_payment',
           payment_reference: paymentSession.payment_reference,
-          payment_url: paymentSession.payment_url
+          payment_url: paymentSession.payment_url,
+          pickup_token: pickupToken
         },
         { transaction: t }
       );
@@ -352,6 +363,27 @@ class OrderService {
     });
   }
 
+  static async generateOrderQrImage(order, product) {
+    try {
+      const qrDir = path.resolve(__dirname, '../../public/uploads/qr');
+      fs.mkdirSync(qrDir, { recursive: true });
+      const fileName = `qr-${order.order_code}.png`;
+      const filePath = path.join(qrDir, fileName);
+
+      const clientUrl = UrlHelper.getClientUrl() || 'http://localhost:3000';
+      const isPhysical = product ? product.is_physical !== false : true;
+      const qrPayload = isPhysical
+        ? `${clientUrl}/pickup-verify?token=${order.pickup_token}`
+        : `ESIM:${order.order_code}:${order.pickup_token}`;
+
+      await QRCode.toFile(filePath, qrPayload, { width: 320, margin: 2 });
+      return UrlHelper.resolveAssetUrl(`/uploads/qr/${fileName}`);
+    } catch (err) {
+      console.warn('[OrderService] Failed to generate QR image:', err.message);
+      return null;
+    }
+  }
+
   static async handlePaymentWebhook({ order_code, payment_status }) {
     const order = await Order.findOne({ where: { order_code } });
     if (!order) {
@@ -361,12 +393,20 @@ class OrderService {
     }
 
     if (payment_status === 'settlement' || payment_status === 'capture' || payment_status === 'paid') {
-      await order.update({ status: 'paid' });
+      if (!order.pickup_token) {
+        await order.update({
+          status: 'paid',
+          pickup_token: crypto.randomBytes(16).toString('hex')
+        });
+      } else {
+        await order.update({ status: 'paid' });
+      }
       const [product, user, pickupLocation] = await Promise.all([
         Product.findByPk(order.product_id),
         User.findByPk(order.user_id),
-        PickupLocation.findByPk(order.pickup_location_id)
+        order.pickup_location_id ? PickupLocation.findByPk(order.pickup_location_id) : null
       ]);
+      const qrImageUrl = await this.generateOrderQrImage(order, product);
       await this.recordRentalLog({
         order,
         productName: product ? product.name : 'Travel Gear',
@@ -376,7 +416,8 @@ class OrderService {
       await N8nService.triggerOrderPaidWebhook(order, {
         user,
         product,
-        pickupLocation
+        pickupLocation,
+        qrImageUrl
       });
     }
 

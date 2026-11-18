@@ -82,6 +82,25 @@
         240
       ],
       "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://waha:3000/api/sendImage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"session\": \"default\",\n  \"chatId\": {{ JSON.stringify($('Format Payload & Nomor WA').item.json.chatId) }},\n  \"file\": {\n    \"mimetype\": \"image/png\",\n    \"filename\": {{ JSON.stringify('qr-' + $('Webhook: Order Paid').item.json.body.order_code + '.png') }},\n    \"url\": {{ JSON.stringify($('Webhook: Order Paid').item.json.body.qr_image_url) }}\n  },\n  \"caption\": {{ JSON.stringify($('Webhook: Order Paid').item.json.body.is_physical !== false ? 'QR Verifikasi Pengambilan Barang (' + $('Webhook: Order Paid').item.json.body.order_code + ') - Tunjukkan ke petugas konter bandara.' : 'QR Aktivasi eSIM (' + $('Webhook: Order Paid').item.json.body.order_code + ').') }}\n}",
+        "options": {}
+      },
+      "id": "javamifack-waha-send-qr",
+      "name": "WAHA: Kirim QR Code WA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1220,
+        240
+      ],
+      "continueOnFail": true
     }
   ],
   "connections": {
@@ -117,6 +136,17 @@
           }
         ],
         []
+      ]
+    },
+    "WAHA: Kirim Konfirmasi WA": {
+      "main": [
+        [
+          {
+            "node": "WAHA: Kirim QR Code WA",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },

@@ -1835,7 +1835,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"category_id\": 5,\n    \"pickup_location_id\": 1,\n    \"name\": \"Raturu Winter Jacket\",\n    \"description\": \"Windproof thermal puffer jacket designed for snow and four-season travel.\",\n    \"image_url\": \"/uploads/jaket.jpg\",\n    \"price_per_day\": 45000,\n    \"stock\": 20,\n    \"is_active\": true\n}"
+              "raw": "{\n    \"category_id\": 5,\n    \"pickup_location_id\": 1,\n    \"name\": \"Raturu Winter Jacket\",\n    \"description\": \"Windproof thermal puffer jacket designed for snow and four-season travel.\",\n    \"image_url\": \"/uploads/jaket.jpg\",\n    \"price_per_day\": 45000,\n    \"stock\": 20,\n    \"is_physical\": true,\n    \"is_active\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/products",
@@ -2254,6 +2254,39 @@
                 "cms",
                 "orders",
                 "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Verify Pickup QR Token (CMS)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/cms/orders/verify-pickup?token=sample-pickup-token",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cms",
+                "orders",
+                "verify-pickup"
+              ],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "sample-pickup-token"
+                }
               ]
             }
           }

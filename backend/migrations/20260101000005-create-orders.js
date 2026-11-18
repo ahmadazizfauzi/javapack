@@ -37,7 +37,7 @@ module.exports = {
       },
       pickup_location_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: 'pickup_locations',
           key: 'id'
@@ -82,6 +82,11 @@ module.exports = {
       payment_url: {
         type: Sequelize.TEXT,
         allowNull: true
+      },
+      pickup_token: {
+        type: Sequelize.STRING(64),
+        allowNull: true,
+        unique: true
       },
       created_at: {
         allowNull: false,

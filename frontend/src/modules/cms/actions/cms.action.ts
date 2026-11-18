@@ -107,6 +107,7 @@ interface RawProduct {
   pickup_location_id: number;
   price_per_day: number | string;
   stock: number;
+  is_physical?: boolean;
   image_url?: string | null;
   is_active: boolean;
   created_at?: string;
@@ -141,6 +142,7 @@ export async function fetchCmsProducts(params?: {
         pricePerDay: Number(p.price_per_day),
         durationLabel: "Per Day",
         stock,
+        isPhysical: p.is_physical !== false,
         imageUrl: resolveCmsAssetUrl(p.image_url, "/images/products/koper.jpg"),
         isActive: Boolean(p.is_active),
         status: p.is_active ? "Active" : "Inactive",
@@ -151,10 +153,11 @@ export async function fetchCmsProducts(params?: {
 
 export async function createCmsProduct(payload: {
   category_id: number;
-  pickup_location_id: number;
+  pickup_location_id?: number | null;
   name: string;
   price_per_day: number;
   stock: number;
+  is_physical?: boolean;
   image_url?: string;
   is_active?: boolean;
 }) {
@@ -165,10 +168,11 @@ export async function updateCmsProduct(
   id: string,
   payload: {
     category_id?: number;
-    pickup_location_id?: number;
+    pickup_location_id?: number | null;
     name?: string;
     price_per_day?: number;
     stock?: number;
+    is_physical?: boolean;
     image_url?: string;
     is_active?: boolean;
   }

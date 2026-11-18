@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       pickup_location_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
       },
       name: {
         type: DataTypes.STRING(150),
@@ -49,6 +49,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0
+      },
+      is_physical: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
       },
       is_active: {
         type: DataTypes.BOOLEAN,

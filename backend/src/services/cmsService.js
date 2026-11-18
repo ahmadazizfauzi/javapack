@@ -92,6 +92,35 @@ class CmsService {
     return order;
   }
 
+  static async getOrderByPickupToken(token) {
+    if (!token) {
+      const error = new Error('Pickup token is required');
+      error.statusCode = 400;
+      throw error;
+    }
+
+    const order = await Order.findOne({
+      where: { pickup_token: token },
+      include: [
+        { model: User, as: 'user', attributes: ['id', 'name', 'email', 'phone'] },
+        {
+          model: Product,
+          as: 'product',
+          attributes: ['id', 'name', 'slug', 'price_per_day', 'is_physical'],
+          include: [{ model: Category, as: 'category', attributes: ['id', 'name', 'slug'] }]
+        },
+        { model: PickupLocation, as: 'pickupLocation', attributes: ['id', 'name', 'city', 'address', 'operational_hours'] }
+      ]
+    });
+
+    if (!order) {
+      const error = new Error('Order not found for this QR token');
+      error.statusCode = 404;
+      throw error;
+    }
+    return order;
+  }
+
   static async updateOrderStatus(orderId, status) {
     const allowedStatuses = ['pending_payment', 'paid', 'active_rent', 'completed'];
     if (!allowedStatuses.includes(status)) {
@@ -113,7 +142,12 @@ class CmsService {
       }
 
       const previousStatus = order.status;
-      if (previousStatus !== status && (previousStatus === 'completed' || status === 'completed')) {
+      const isPhysical = order.product ? order.product.is_physical !== false : true;
+      if (
+        isPhysical &&
+        previousStatus !== status &&
+        (previousStatus === 'completed' || status === 'completed')
+      ) {
         const product = await Product.findByPk(order.product_id, {
           lock: t.LOCK.UPDATE,
           transaction: t

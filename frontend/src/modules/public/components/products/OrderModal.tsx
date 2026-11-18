@@ -117,7 +117,7 @@ export function OrderModal({
       setErrorMsg("Please enter a valid rental quantity.");
       return;
     }
-    if (!pickupLocationId) {
+    if (product.isPhysical && !pickupLocationId) {
       setErrorMsg("Please select a pickup location.");
       return;
     }
@@ -127,7 +127,7 @@ export function OrderModal({
     try {
       const result = await createOrderCheckout({
         product_id: Number(product.id),
-        pickup_location_id: Number(pickupLocationId),
+        pickup_location_id: product.isPhysical ? Number(pickupLocationId) : undefined,
         quantity: validQuantity,
         start_date: formatApiDate(startDate),
         end_date: formatApiDate(endDate),
@@ -207,7 +207,11 @@ export function OrderModal({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div
+            className={`grid grid-cols-1 gap-3 ${
+              product.isPhysical ? "sm:grid-cols-2" : ""
+            }`}
+          >
             <BaseInput
               label="Quantity"
               type="number"
@@ -217,13 +221,15 @@ export function OrderModal({
               value={quantityInput}
               onChange={handleQuantityChange}
             />
-            <BaseDropdown
-              label="Pickup Location"
-              options={pickupOptions}
-              value={pickupLocationId}
-              placeholder="Select pickup location"
-              onChange={setPickupLocationId}
-            />
+            {product.isPhysical && (
+              <BaseDropdown
+                label="Pickup Location"
+                options={pickupOptions}
+                value={pickupLocationId}
+                placeholder="Select pickup location"
+                onChange={setPickupLocationId}
+              />
+            )}
           </div>
 
           <BaseCard

@@ -12,6 +12,7 @@ router.get('/dashboard', CmsDashboardController.getOverview);
 
 // CMS Orders Management
 router.get('/orders', CmsController.listOrders);
+router.get('/orders/verify-pickup', CmsController.verifyOrderPickupToken);
 router.get('/orders/:id', CmsController.getOrderById);
 router.patch('/orders/:id/status', CmsController.updateOrderStatus);
 router.delete('/orders/:id', CmsController.deleteOrder);

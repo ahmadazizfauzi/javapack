@@ -29,7 +29,8 @@ module.exports = {
         description: 'Windproof thermal puffer jacket designed for snow and four-season travel.',
         image_url: '/uploads/jaket.jpg',
         price_per_day: 45000,
-        stock: 20
+        stock: 20,
+        is_physical: true
       },
       {
         category_id: pocketWifiId,
@@ -38,7 +39,8 @@ module.exports = {
         description: 'Portable 5G Pocket WiFi modem delivering fast unlimited internet for up to 6 devices.',
         image_url: '/uploads/modem.jpg',
         price_per_day: 55000,
-        stock: 25
+        stock: 25,
+        is_physical: true
       },
       {
         category_id: bagsLuggageId,
@@ -47,7 +49,8 @@ module.exports = {
         description: 'Lightweight polycarbonate cabin suitcase with 360-degree wheels and TSA-approved lock.',
         image_url: '/uploads/koper.jpg',
         price_per_day: 40000,
-        stock: 15
+        stock: 15,
+        is_physical: true
       },
       {
         category_id: esimId,
@@ -56,13 +59,14 @@ module.exports = {
         description: 'Single country Japan 5G eSIM with unlimited and fixed quota options — instant QR activation.',
         image_url: '/uploads/esim-japan.jpg',
         price_per_day: 19000,
-        stock: 50
+        stock: 50,
+        is_physical: false
       }
     ];
 
     const products = rawProducts.map((item, idx) => ({
       ...item,
-      pickup_location_id: locations[idx % locations.length].id,
+      pickup_location_id: item.is_physical ? locations[idx % locations.length].id : null,
       is_active: true,
       created_at: now,
       updated_at: now

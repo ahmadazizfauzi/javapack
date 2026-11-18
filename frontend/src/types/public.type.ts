@@ -46,6 +46,7 @@ export interface PublicProduct {
   pickupLocationName: string;
   pricePerDay: number;
   stock: number;
+  isPhysical: boolean;
   imageUrl: string;
 }
 
@@ -90,7 +91,7 @@ export interface ContactFormPayload {
 
 export interface OrderCheckoutPayload {
   product_id: number;
-  pickup_location_id: number;
+  pickup_location_id?: number;
   quantity: number;
   start_date: string;
   end_date: string;
