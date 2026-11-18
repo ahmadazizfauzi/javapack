@@ -3,7 +3,7 @@ const axios = require('axios');
 class N8nService {
   static async triggerOrderPaidWebhook(
     order,
-    { user = null, product = null, pickupLocation = null, qrImageUrl = null } = {}
+    { user = null, product = null, pickupLocation = null, qrImageUrl = null, qrImageBase64 = null } = {}
   ) {
     const webhookUrl = process.env.N8N_WEBHOOK_URL;
     if (!webhookUrl) {
@@ -27,6 +27,7 @@ class N8nService {
           pickup_location_name: pickupLocation ? pickupLocation.name : null,
           pickup_token: order.pickup_token || null,
           qr_image_url: qrImageUrl || null,
+          qr_image_base64: qrImageBase64 || null,
           quantity: order.quantity,
           start_date: order.start_date,
           end_date: order.end_date,

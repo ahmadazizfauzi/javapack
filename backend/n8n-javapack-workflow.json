@@ -89,7 +89,7 @@
         "url": "http://waha:3000/api/sendImage",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"session\": \"default\",\n  \"chatId\": {{ JSON.stringify($('Format Payload & Nomor WA').item.json.chatId) }},\n  \"file\": {\n    \"mimetype\": \"image/png\",\n    \"filename\": {{ JSON.stringify('qr-' + $('Webhook: Order Paid').item.json.body.order_code + '.png') }},\n    \"url\": {{ JSON.stringify($('Webhook: Order Paid').item.json.body.qr_image_url) }}\n  },\n  \"caption\": {{ JSON.stringify($('Webhook: Order Paid').item.json.body.is_physical !== false ? 'QR Verifikasi Pengambilan Barang (' + $('Webhook: Order Paid').item.json.body.order_code + ') - Tunjukkan ke petugas konter bandara.' : 'QR Aktivasi eSIM (' + $('Webhook: Order Paid').item.json.body.order_code + ').') }}\n}",
+        "jsonBody": "={\n  \"session\": \"default\",\n  \"chatId\": {{ JSON.stringify($('Format Payload & Nomor WA').item.json.chatId) }},\n  \"file\": {\n    \"mimetype\": \"image/png\",\n    \"filename\": {{ JSON.stringify('qr-' + $('Webhook: Order Paid').item.json.body.order_code + '.png') }},\n    \"data\": {{ JSON.stringify($('Webhook: Order Paid').item.json.body.qr_image_base64) }}\n  },\n  \"caption\": {{ JSON.stringify($('Webhook: Order Paid').item.json.body.is_physical !== false ? 'QR Verifikasi Pengambilan Barang (' + $('Webhook: Order Paid').item.json.body.order_code + ') - Tunjukkan ke petugas konter bandara.' : 'QR Aktivasi eSIM (' + $('Webhook: Order Paid').item.json.body.order_code + ').') }}\n}",
         "options": {}
       },
       "id": "javamifack-waha-send-qr",

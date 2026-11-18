@@ -377,10 +377,15 @@ class OrderService {
         : `ESIM:${order.order_code}:${order.pickup_token}`;
 
       await QRCode.toFile(filePath, qrPayload, { width: 320, margin: 2 });
-      return UrlHelper.resolveAssetUrl(`/uploads/qr/${fileName}`);
+      const dataUrl = await QRCode.toDataURL(qrPayload, { width: 320, margin: 2 });
+      const qrImageBase64 = dataUrl.replace(/^data:image\/png;base64,/, '');
+      return {
+        qrImageUrl: UrlHelper.resolveAssetUrl(`/uploads/qr/${fileName}`),
+        qrImageBase64
+      };
     } catch (err) {
       console.warn('[OrderService] Failed to generate QR image:', err.message);
-      return null;
+      return { qrImageUrl: null, qrImageBase64: null };
     }
   }
 
@@ -406,7 +411,7 @@ class OrderService {
         User.findByPk(order.user_id),
         order.pickup_location_id ? PickupLocation.findByPk(order.pickup_location_id) : null
       ]);
-      const qrImageUrl = await this.generateOrderQrImage(order, product);
+      const { qrImageUrl, qrImageBase64 } = await this.generateOrderQrImage(order, product);
       await this.recordRentalLog({
         order,
         productName: product ? product.name : 'Travel Gear',
@@ -417,7 +422,8 @@ class OrderService {
         user,
         product,
         pickupLocation,
-        qrImageUrl
+        qrImageUrl,
+        qrImageBase64
       });
     }
 
