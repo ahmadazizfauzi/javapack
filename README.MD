@@ -35,7 +35,7 @@ Once a payment is confirmed (`PAID`), JavaPack automatically triggers an **n8n +
 | :---: | :---: |
 | <img src="./docs/images/wa-physical-qr.jpg" alt="WhatsApp Physical Gear QR" width="320" /> | <img src="./docs/images/wa-esim-qr.jpg" alt="WhatsApp eSIM QR" width="320" /> |
 
-### Bonus: Live n8n AI Bot (`RaturuBot`)
+### Additional Info: Live n8n AI Bot (`RaturuBot`)
 
 The WhatsApp number powering this WAHA instance also runs my live digital store automation bot (**RaturuBot** for *Raturu Store*). After receiving your JavaPack order confirmation on WhatsApp, feel free to reply to the chat to try out the live **n8n AI auto-reply bot** in action:
 
