@@ -14,6 +14,7 @@ This repository consists of two main applications:
 Once a payment is confirmed (`PAID`), JavaPack automatically triggers an **n8n + WAHA** workflow that sends an order confirmation message and a **QR code** directly to the customer's WhatsApp.
 
 - **Ready to Test Out of the Box:** `backend/.env.example` already points to our live n8n webhook (`http://195.88.211.211:5678/webhook/javapack-order`). Just register using an active WhatsApp number and complete a checkout — notifications and QR images work immediately from localhost without setting up n8n yourself.
+- **Live n8n Store Bot (RaturuBot):** The WhatsApp number connected to this WAHA instance also runs my live digital store automation bot (**RaturuBot** for *Raturu Store*). After receiving the JavaPack order confirmation on WhatsApp, feel free to reply to that chat to try out the live **n8n auto-reply bot** in action!
 - **Workflow File:** [`backend/n8n-javapack-workflow.json`](./backend/n8n-javapack-workflow.json)
 
 ## Physical vs Digital Products & QR Verification
