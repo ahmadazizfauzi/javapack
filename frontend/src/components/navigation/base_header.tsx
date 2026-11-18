@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Menu } from "lucide-react";
-import { baseTypography } from "@/tokens/base_typography";
 
 export interface BaseHeaderProps {
   breadcrumb: string;
@@ -31,7 +30,7 @@ export function BaseHeader({
           </button>
         )}
         <div>
-          <h1 className={`${baseTypography["2xl"]} font-bold tracking-tight text-surface-foreground`}>
+          <h1 className="text-3xl font-bold tracking-tight text-surface-foreground">
             {title}
           </h1>
         </div>

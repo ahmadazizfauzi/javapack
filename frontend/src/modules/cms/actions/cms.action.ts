@@ -24,6 +24,17 @@ interface ApiEnvelope<T> {
   data: T;
 }
 
+const API_ORIGIN = (
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1"
+).replace(/\/api\/v1\/?$/, "");
+
+function resolveCmsAssetUrl(url?: string | null, fallback = ""): string {
+  if (!url) return fallback;
+  if (/^https?:\/\//i.test(url)) return url;
+  if (url.startsWith("/uploads/")) return `${API_ORIGIN}${url}`;
+  return url;
+}
+
 interface RawPaginated<T> {
   items: T[];
   pagination: CmsPagination;
@@ -125,7 +136,7 @@ export async function fetchCmsProducts(params?: {
         pricePerDay: Number(p.price_per_day),
         durationLabel: "Per Day",
         stock,
-        imageUrl: p.image_url || "/images/travel-luggage.jpg",
+        imageUrl: resolveCmsAssetUrl(p.image_url, "/images/products/koper.jpg"),
         isActive: Boolean(p.is_active),
         status: p.is_active ? "Active" : "Inactive",
       };
@@ -190,7 +201,7 @@ export async function fetchCmsHeroBanners(params?: {
     items: res.data.data.items.map((b) => ({
       id: String(b.id),
       createdAt: safeDate(b.created_at),
-      imageUrl: b.image_url || "/images/travel-lounge.jpg",
+      imageUrl: resolveCmsAssetUrl(b.image_url, "/images/products/jaket.jpg"),
       title: b.title,
       shortDescription: b.subtitle || "",
       ctaLink: b.cta_link || "/products",
@@ -491,8 +502,8 @@ export async function fetchCmsAboutUs(): Promise<CmsAboutContent> {
     eyebrow: d.eyebrow || "",
     title: d.title || "",
     description: d.description || "",
-    bannerImageUrl: d.banner_image_url || "",
-    sideImageUrl: d.side_image_url || "",
+    bannerImageUrl: resolveCmsAssetUrl(d.banner_image_url),
+    sideImageUrl: resolveCmsAssetUrl(d.side_image_url),
   };
 }
 

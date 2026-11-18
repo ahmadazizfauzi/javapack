@@ -196,13 +196,6 @@ export function CmsCategoriesPage() {
       ),
     },
     {
-      key: "slug",
-      header: "URL SLUG",
-      render: (row) => (
-        <span className={`${baseTypography.xs} text-surface-muted`}>{row.slug}</span>
-      ),
-    },
-    {
       key: "actions",
       header: "ACTIONS",
       align: "right",

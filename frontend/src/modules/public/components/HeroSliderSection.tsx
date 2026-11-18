@@ -20,7 +20,6 @@ export function HeroSliderSection({
     banners.length > 1 ? 1 : 0
   );
   const [direction, setDirection] = useState<"next" | "prev">("next");
-  const [isPaused, setIsPaused] = useState(false);
 
   const total = banners.length;
 
@@ -37,12 +36,12 @@ export function HeroSliderSection({
   }, [total]);
 
   useEffect(() => {
-    if (total <= 1 || isPaused) return;
+    if (total <= 1) return;
     const timer = setInterval(() => {
       handleNext();
-    }, 5000);
+    }, 3500);
     return () => clearInterval(timer);
-  }, [total, isPaused, handleNext]);
+  }, [total, handleNext]);
 
   const prevIndex = total > 0 ? (activeIndex - 1 + total) % total : 0;
   const nextIndex = total > 0 ? (activeIndex + 1) % total : 0;
@@ -82,8 +81,6 @@ export function HeroSliderSection({
       {total > 0 && currentBanner && (
         <>
           <div
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
             className="mt-10 grid w-full grid-cols-1 items-center gap-5 lg:grid-cols-12"
           >
         {total > 1 && (

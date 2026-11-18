@@ -66,6 +66,7 @@ export function CmsProductsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [deleteTarget, setDeleteTarget] = useState<CmsProductItem | null>(null);
+  const [previewItem, setPreviewItem] = useState<CmsProductItem | null>(null);
   const [toast, setToast] = useState<{
     visible: boolean;
     variant: "success" | "error";
@@ -265,17 +266,30 @@ export function CmsProductsPage() {
       ),
     },
     {
+      key: "imageUrl",
+      header: "PREVIEW",
+      widthClass: "w-20",
+      render: (row) => (
+        <button
+          type="button"
+          onClick={() => setPreviewItem(row)}
+          className="group block overflow-hidden rounded-lg border border-surface-elevated bg-surface-sidebar transition-colors hover:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/40"
+          title={`Preview ${row.name}`}
+          aria-label={`Preview ${row.name}`}
+        >
+          <img
+            src={row.imageUrl || "/images/products/koper.jpg"}
+            alt={row.name}
+            className="h-10 w-14 object-cover transition-transform duration-200 group-hover:scale-105"
+          />
+        </button>
+      ),
+    },
+    {
       key: "name",
       header: "PRODUCT NAME",
       render: (row) => (
-        <div className="flex items-center gap-3">
-          <img
-            src={row.imageUrl || "/images/travel-luggage.jpg"}
-            alt={row.name}
-            className="h-10 w-10 shrink-0 rounded-lg border border-surface-elevated object-cover bg-surface-sidebar"
-          />
-          <span className="font-semibold text-surface-foreground">{row.name}</span>
-        </div>
+        <span className="font-semibold text-surface-foreground">{row.name}</span>
       ),
     },
     {
@@ -501,6 +515,32 @@ export function CmsProductsPage() {
           </>
         }
       />
+
+      <BaseModal
+        isOpen={Boolean(previewItem)}
+        onClose={() => setPreviewItem(null)}
+        title={previewItem?.name ?? "Image Preview"}
+        description={previewItem?.category}
+        footer={
+          <BaseButton
+            variant="secondary"
+            size="sm"
+            onClick={() => setPreviewItem(null)}
+          >
+            Close
+          </BaseButton>
+        }
+      >
+        {previewItem && (
+          <div className="overflow-hidden rounded-xl border border-surface-elevated bg-surface-sidebar">
+            <img
+              src={previewItem.imageUrl || "/images/products/koper.jpg"}
+              alt={previewItem.name}
+              className="max-h-[60vh] w-full object-contain"
+            />
+          </div>
+        )}
+      </BaseModal>
 
       <BaseToast
         isVisible={toast.visible}

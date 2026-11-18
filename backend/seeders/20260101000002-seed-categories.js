@@ -6,19 +6,29 @@ module.exports = {
     const now = new Date();
     const categories = [
       {
-        name: 'Pocket WiFi',
-        slug: 'pocket-wifi',
-        description: 'Unlimited global portable WiFi routers for multi-device travel connectivity.'
-      },
-      {
         name: 'eSIM',
         slug: 'esim',
-        description: 'Instant digital eSIM data plans activated via QR code without physical SIM swap.'
+        description: 'Instant digital eSIM data plans activated without swapping physical SIM cards.'
+      },
+      {
+        name: 'Pocket WiFi',
+        slug: 'pocket-wifi',
+        description: 'Portable WiFi modems for reliable multi-device international internet connectivity.'
       },
       {
         name: 'SIM Card',
         slug: 'sim-card',
-        description: 'Prepaid physical travel SIM cards ready for airport pickup or delivery.'
+        description: 'Prepaid physical travel SIM cards ready for international journeys.'
+      },
+      {
+        name: 'Bags & Luggage',
+        slug: 'bags-and-luggage',
+        description: 'Durable hardcase cabin luggage and travel bags built for frequent flyers.'
+      },
+      {
+        name: 'Apparel',
+        slug: 'apparel',
+        description: 'Insulated winter jackets and cold-weather outerwear available for rent.'
       }
     ].map((item) => ({ ...item, is_active: true, created_at: now, updated_at: now }));
 

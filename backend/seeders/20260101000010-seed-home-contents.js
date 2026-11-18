@@ -9,9 +9,9 @@ module.exports = {
       [
         {
           badge_text: 'International Travel Gear Rental',
-          headline: 'Travel Lighter, Your Gear Ready at the Airport',
+          headline: 'Travel Lighter with JavaPack',
           subheadline:
-            'Rent winter jackets, hardcase luggage, action cams & WiFi adapters without buying expensive gear — easy pickup at Terminal 3.',
+            'Rent winter jackets, Pocket WiFi modems, and cabin luggage with convenient pickup right at the airport.',
           created_at: now,
           updated_at: now
         }

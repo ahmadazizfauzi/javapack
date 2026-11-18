@@ -8,14 +8,14 @@ module.exports = {
       'contact_infos',
       [
         {
-          location_title: 'JavaPack Counter — Malang, East Java',
-          location_subtitle: 'Malang City, East Java, Indonesia',
-          address: 'Jl. Soekarno Hatta No. 18, Lowokwaru, Malang, East Java 65141',
-          whatsapp: '+62 812-3456-7890',
-          email: 'hello@javapack.id',
+          location_title: 'Malang',
+          location_subtitle: 'Suhat',
+          address: 'Jatimulyo, Lowokwaru, Kota Malang, Jawa Timur',
+          whatsapp: '085216373763',
+          email: 'admin@gmail.com',
           operating_hours: 'Open Daily 08:00 - 22:00 WIB',
-          latitude: '-7.9467',
-          longitude: '112.6157',
+          latitude: '-7.962497128667803',
+          longitude: '112.65455289479156',
           created_at: now,
           updated_at: now
         }

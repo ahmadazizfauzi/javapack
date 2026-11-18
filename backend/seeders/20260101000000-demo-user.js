@@ -10,10 +10,10 @@ module.exports = {
 
     await queryInterface.bulkInsert('users', [
       {
-        name: 'Ahmad Aziz Fauzi',
+        name: 'Admin Operational',
         email: 'admin@gmail.com',
         password: hashedPassword,
-        phone: '085216373763',
+        phone: '089630637034',
         role: 'admin',
         created_at: now,
         updated_at: now
@@ -22,7 +22,7 @@ module.exports = {
         name: 'Ahmad Aziz Fauzi',
         email: 'ahmad@gmail.com',
         password: hashedPassword,
-        phone: '085216373764',
+        phone: '085216373763',
         role: 'customer',
         created_at: now,
         updated_at: now

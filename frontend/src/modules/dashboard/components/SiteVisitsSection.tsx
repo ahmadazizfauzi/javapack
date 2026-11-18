@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Calendar } from "lucide-react";
 import { BaseCard } from "@/components/ui/base_card";
 import { BaseDropdown } from "@/components/ui/base_dropdown";
 import { SiteVisitPoint } from "@/types/dashboard.type";
@@ -65,7 +64,6 @@ export function SiteVisitsSection({
             options={monthOptions}
             value={selectedMonth}
             onChange={onMonthChange}
-            icon={<Calendar className="h-3.5 w-3.5" />}
           />
           <BaseDropdown
             options={yearOptions}

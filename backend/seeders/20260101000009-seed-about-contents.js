@@ -8,12 +8,12 @@ module.exports = {
       'about_contents',
       [
         {
-          eyebrow: 'WHY CHOOSE JAVAPACK?',
-          title: 'Rent Premium Travel Gear, Save Up to 70% on Trip Costs',
+          eyebrow: 'ABOUT JAVAPACK',
+          title: 'The Story Behind JavaPack and Our Travel Gear Rental Service',
           description:
-            'JavaPack helps travelers heading to four-season destinations avoid buying expensive thermal parkas, hardcase luggage, or action cameras that are only used once a year.\n\nEvery item goes through hygienic laundry and UV sterilization before dispatch, and can be picked up and returned directly at our Soekarno-Hatta Terminal 3 counter.',
-          banner_image_url: '/images/travel-lounge.jpg',
-          side_image_url: '/images/travel-winter.jpg',
+            'The name JavaPack comes from two simple words: "Java", representing Jawa, and "Pack", meaning the essential belongings we pack for a journey. Built on that straightforward idea, JavaPack makes international and seasonal travel easier without forcing travelers to buy expensive gear for occasional trips.\n\nWe provide clean, well-maintained winter jackets, 5G Pocket WiFi modems, and hardcase cabin luggage ready for pickup directly at your chosen airport.',
+          banner_image_url: '/images/products/koper.jpg',
+          side_image_url: '/images/products/jaket.jpg',
           created_at: now,
           updated_at: now
         }
