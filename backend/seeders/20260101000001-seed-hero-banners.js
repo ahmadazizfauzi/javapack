@@ -6,11 +6,11 @@ module.exports = {
     const now = new Date();
     const banners = [
       {
-        title: 'Raturu Winter Jacket',
-        subtitle: 'Rent insulated thermal puffer jackets built for cold-weather and snowy destinations without buying new.',
-        image_url: '/uploads/jaket.jpg',
-        cta_text: 'Rent Jacket',
-        cta_link: '/products?search=Raturu',
+        title: 'eSIM Japan',
+        subtitle: 'Single country Japan 5G eSIM with unlimited and fixed quota options — instant QR activation.',
+        image_url: '/uploads/esim-japan.jpg',
+        cta_text: 'Rent eSIM',
+        cta_link: '/products?search=eSIM',
         sort_order: 1,
         is_active: true
       },
